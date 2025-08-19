@@ -9,9 +9,9 @@
     <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
-      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap");
+      @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
       body {
-        font-family: "Inter", sans-serif;
+        font-family: 'Inter', sans-serif;
       }
     </style>
   </head>
@@ -25,14 +25,14 @@
       function App() {
         // State management
         const [loading, setLoading] = useState(true);
-        const [view, setView] = useState("setup");
+        const [view, setView] = useState('setup');
         const [teams, setTeams] = useState([]);
         const [totalStages, setTotalStages] = useState(3);
         const [currentStage, setCurrentStage] = useState(1);
         const [finishedRiders, setFinishedRiders] = useState([]);
         const [showModal, setShowModal] = useState(false);
         const [modalRider, setModalRider] = useState(null);
-        const [modalTime, setModalTime] = useState({ seconds: 0 });
+        const [modalFinishRows, setModalFinishRows] = useState(5);
         const [modalTokens, setModalTokens] = useState({
           sprint: 0,
           mountain: 0,
@@ -40,12 +40,15 @@
         const [error, setError] = useState(null);
         const [rankings, setRankings] = useState(null);
         const [editingTeamId, setEditingTeamId] = useState(null);
+        const [addedTime, setAddedTime] = useState(0);
+        const [roundNumber, setRoundNumber] = useState(1);
+        const [isProcessingRound, setIsProcessingRound] = useState(false);
 
         // Load data from localStorage on initial render
         useEffect(() => {
           try {
             const savedData = JSON.parse(
-              localStorage.getItem("flammeRougeTour")
+              localStorage.getItem('flammeRougeTour')
             );
             if (savedData) {
               setTeams(savedData.teams);
@@ -54,49 +57,50 @@
               setFinishedRiders(savedData.finishedRiders);
               setView(savedData.view);
               setRankings(savedData.rankings);
-              setLoading(false); // Set loading to false only after all data is loaded
+              setAddedTime(savedData.addedTime || 0);
+              setRoundNumber(savedData.roundNumber || 1);
+              setLoading(false);
             } else {
-              // Initialize default state if no data is found
               setTeams([
                 {
-                  id: "red",
-                  name: "Red Team",
-                  originalName: "Red Team",
+                  id: 'red',
+                  name: 'Red Team',
+                  originalName: 'Red Team',
                   active: true,
                   history: [],
                 },
                 {
-                  id: "blue",
-                  name: "Blue Team",
-                  originalName: "Blue Team",
+                  id: 'blue',
+                  name: 'Blue Team',
+                  originalName: 'Blue Team',
                   active: true,
                   history: [],
                 },
                 {
-                  id: "green",
-                  name: "Green Team",
-                  originalName: "Green Team",
+                  id: 'green',
+                  name: 'Green Team',
+                  originalName: 'Green Team',
                   active: true,
                   history: [],
                 },
                 {
-                  id: "black",
-                  name: "Black Team",
-                  originalName: "Black Team",
+                  id: 'black',
+                  name: 'Black Team',
+                  originalName: 'Black Team',
                   active: true,
                   history: [],
                 },
                 {
-                  id: "white",
-                  name: "White Team",
-                  originalName: "White Team",
+                  id: 'white',
+                  name: 'White Team',
+                  originalName: 'White Team',
                   active: true,
                   history: [],
                 },
                 {
-                  id: "pink",
-                  name: "Pink Team",
-                  originalName: "Pink Team",
+                  id: 'pink',
+                  name: 'Pink Team',
+                  originalName: 'Pink Team',
                   active: true,
                   history: [],
                 },
@@ -104,13 +108,15 @@
               setTotalStages(3);
               setCurrentStage(1);
               setFinishedRiders([]);
-              setView("setup");
+              setView('setup');
               setRankings(null);
-              setLoading(false); // Set loading to false for fresh start
+              setAddedTime(0);
+              setRoundNumber(1);
+              setLoading(false);
             }
           } catch (e) {
-            console.error("Failed to load data from localStorage", e);
-            setError("Failed to load tour data. Please try again.");
+            console.error('Failed to load data from localStorage', e);
+            setError('Failed to load tour data. Please try again.');
             setLoading(false);
           }
         }, []);
@@ -125,8 +131,10 @@
               finishedRiders,
               view,
               rankings,
+              addedTime,
+              roundNumber,
             };
-            localStorage.setItem("flammeRougeTour", JSON.stringify(dataToSave));
+            localStorage.setItem('flammeRougeTour', JSON.stringify(dataToSave));
           }
         }, [
           loading,
@@ -136,52 +144,54 @@
           finishedRiders,
           view,
           rankings,
+          addedTime,
+          roundNumber,
         ]);
 
         // Helper function to get team color classes
         const getTeamColorClasses = (originalName) => {
           switch (originalName) {
-            case "Red Team":
+            case 'Red Team':
               return {
-                bg: "bg-red-600",
-                text: "text-white",
-                hover: "hover:bg-red-700",
+                bg: 'bg-red-600',
+                text: 'text-white',
+                hover: 'hover:bg-red-700',
               };
-            case "Blue Team":
+            case 'Blue Team':
               return {
-                bg: "bg-blue-600",
-                text: "text-white",
-                hover: "hover:bg-blue-700",
+                bg: 'bg-blue-600',
+                text: 'text-white',
+                hover: 'hover:bg-blue-700',
               };
-            case "Green Team":
+            case 'Green Team':
               return {
-                bg: "bg-green-600",
-                text: "text-white",
-                hover: "hover:bg-green-700",
+                bg: 'bg-green-600',
+                text: 'text-white',
+                hover: 'hover:bg-green-700',
               };
-            case "Black Team":
+            case 'Black Team':
               return {
-                bg: "bg-gray-800",
-                text: "text-white",
-                hover: "hover:bg-gray-900",
+                bg: 'bg-gray-800',
+                text: 'text-white',
+                hover: 'hover:bg-gray-900',
               };
-            case "White Team":
+            case 'White Team':
               return {
-                bg: "bg-gray-200",
-                text: "text-gray-900",
-                hover: "hover:bg-gray-300",
+                bg: 'bg-gray-200',
+                text: 'text-gray-900',
+                hover: 'hover:bg-gray-300',
               };
-            case "Pink Team":
+            case 'Pink Team':
               return {
-                bg: "bg-pink-600",
-                text: "text-white",
-                hover: "hover:bg-pink-700",
+                bg: 'bg-pink-600',
+                text: 'text-white',
+                hover: 'hover:bg-pink-700',
               };
             default:
               return {
-                bg: "bg-gray-500",
-                text: "text-white",
-                hover: "hover:bg-gray-600",
+                bg: 'bg-gray-500',
+                text: 'text-white',
+                hover: 'hover:bg-gray-600',
               };
           }
         };
@@ -211,7 +221,7 @@
         const handleStartTour = () => {
           const activeTeams = teams.filter((t) => t.active);
           if (activeTeams.length === 0) {
-            setError("Please select at least one team to start the tour.");
+            setError('Please select at least one team to start the tour.');
             return;
           }
           const initialTeams = activeTeams.map((team) => ({
@@ -222,21 +232,21 @@
           setTeams(initialTeams);
           setCurrentStage(1);
           setFinishedRiders([]);
-          setView("stage");
+          setView('stage');
           setError(null);
         };
 
         // Logic for the Stage view
         const openModal = (teamName, riderType) => {
           setModalRider({ teamName, riderType });
+          setModalFinishRows(5);
+          setModalTokens({ sprint: 0, mountain: 0 });
           setShowModal(true);
         };
 
         const closeModal = () => {
           setShowModal(false);
           setModalRider(null);
-          setModalTime({ seconds: 0 });
-          setModalTokens({ sprint: 0, mountain: 0 });
         };
 
         const handleSubmitFinish = () => {
@@ -246,25 +256,88 @@
           const newFinishedRider = {
             teamName,
             riderType,
-            time: modalTime.seconds,
-            podium: 0, // Podium points will be calculated automatically
+            time: null,
+            podium: 0,
             sprint: modalTokens.sprint,
             mountain: modalTokens.mountain,
+            round: roundNumber,
+            finishRow: modalFinishRows,
           };
 
           setFinishedRiders((prev) => [...prev, newFinishedRider]);
           closeModal();
         };
 
+        const handleNextRound = () => {
+          if (isProcessingRound) return;
+          setIsProcessingRound(true);
+
+          const secondsMap = { 5: 0, 4: 10, 3: 20, 2: 30, 1: 60 };
+          const ridersInCurrentRound = finishedRiders
+            .filter((r) => r.round === roundNumber && r.time === null)
+            .sort((a, b) => b.finishRow - a.finishRow);
+
+          const updatedFinished = [...finishedRiders];
+
+          // Group riders by consecutive finish rows
+          let packs = [];
+          if (ridersInCurrentRound.length > 0) {
+            let currentPack = [ridersInCurrentRound[0]];
+            for (let i = 1; i < ridersInCurrentRound.length; i++) {
+              // Check if the current rider's row is consecutive to the previous rider's row.
+              // Or if it's the same row, it's part of the same pack.
+              if (
+                ridersInCurrentRound[i].finishRow ===
+                  ridersInCurrentRound[i - 1].finishRow ||
+                ridersInCurrentRound[i].finishRow ===
+                  ridersInCurrentRound[i - 1].finishRow - 1
+              ) {
+                currentPack.push(ridersInCurrentRound[i]);
+              } else {
+                packs.push(currentPack);
+                currentPack = [ridersInCurrentRound[i]];
+              }
+            }
+            packs.push(currentPack);
+          }
+
+          packs.forEach((pack) => {
+            if (pack.length > 0) {
+              const fastestFinishRow = pack[0].finishRow;
+              const secondsForPack = secondsMap[fastestFinishRow];
+              const timeForPack = addedTime * 60 + secondsForPack;
+
+              pack.forEach((riderToUpdate) => {
+                const index = updatedFinished.findIndex(
+                  (r) =>
+                    r.teamName === riderToUpdate.teamName &&
+                    r.riderType === riderToUpdate.riderType &&
+                    r.round === riderToUpdate.round &&
+                    r.time === null
+                );
+                if (index !== -1) {
+                  updatedFinished[index] = {
+                    ...updatedFinished[index],
+                    time: timeForPack,
+                  };
+                }
+              });
+            }
+          });
+
+          setFinishedRiders(updatedFinished);
+          setAddedTime((prev) => prev + 1);
+          setRoundNumber((prev) => prev + 1);
+          setIsProcessingRound(false);
+        };
+
         const handleNextStage = () => {
           setLoading(true);
 
-          // Sort finished riders to determine podium positions
           const sortedFinishedRiders = [...finishedRiders].sort(
             (a, b) => a.time - b.time
           );
 
-          // Assign podium points based on finish order
           const updatedFinishedRiders = sortedFinishedRiders.map(
             (rider, index) => {
               let podiumPoints = 0;
@@ -279,10 +352,10 @@
             const updatedTeam = { ...team };
             const stageResults = {
               rouleur: updatedFinishedRiders.find(
-                (r) => r.teamName === team.name && r.riderType === "Rouleur"
+                (r) => r.teamName === team.name && r.riderType === 'Rouleur'
               ),
               sprinteur: updatedFinishedRiders.find(
-                (r) => r.teamName === team.name && r.riderType === "Sprinteur"
+                (r) => r.teamName === team.name && r.riderType === 'Sprinteur'
               ),
             };
 
@@ -295,23 +368,22 @@
 
           const newCurrentStage = currentStage + 1;
           if (newCurrentStage > totalStages) {
-            // End of tour, calculate final rankings
             calculateFinalRankings(newTeams);
             setTeams(newTeams);
             setCurrentStage(newCurrentStage);
             setFinishedRiders([]);
-            setView("rankings");
+            setView('rankings');
           } else {
-            // Proceed to next stage
             setTeams(newTeams);
             setCurrentStage(newCurrentStage);
             setFinishedRiders([]);
+            setAddedTime(0);
+            setRoundNumber(1);
           }
           setLoading(false);
         };
 
         const calculateFinalRankings = (tourTeams) => {
-          // Helper to calculate total time, podium, sprint, and mountain points
           const calculateTotals = (team) => {
             const totals = { time: 0, podium: 0, sprint: 0, mountain: 0 };
             team.history.forEach((stage) => {
@@ -328,13 +400,11 @@
             return totals;
           };
 
-          // Calculate total scores for each team
           const teamTotals = tourTeams.map((team) => {
             const totals = calculateTotals(team);
             return { ...team, ...totals };
           });
 
-          // Calculate GC, SC, MC based on the rules
           const gcRankings = teamTotals.sort((a, b) => a.time - b.time);
           const scRankings = teamTotals.sort((a, b) => b.sprint - a.sprint);
           const mcRankings = teamTotals.sort((a, b) => b.mountain - a.mountain);
@@ -347,21 +417,20 @@
         };
 
         const handleRestartTour = () => {
-          localStorage.removeItem("flammeRougeTour");
+          localStorage.removeItem('flammeRougeTour');
           window.location.reload();
         };
 
-        // Helper for displaying time
         const formatTime = (seconds) => {
+          if (seconds === null) return 'TBC';
           const min = Math.floor(seconds / 60);
           const sec = seconds % 60;
-          return `${min}:${sec < 10 ? "0" : ""}${sec}`;
+          return `${min}:${sec < 10 ? '0' : ''}${sec}`;
         };
 
-        // Render logic for each view
         const renderSetup = () => {
-          const inactiveClasses = "bg-gray-800";
-          const inactiveTextClasses = "text-gray-100";
+          const inactiveClasses = 'bg-gray-800';
+          const inactiveTextClasses = 'text-gray-100';
 
           return (
             <div className="flex flex-col items-center p-4">
@@ -398,7 +467,7 @@
                                   handleTeamNameChange(e, team.id)
                                 }
                                 onKeyDown={(e) => {
-                                  if (e.key === "Enter") {
+                                  if (e.key === 'Enter') {
                                     handleSaveName();
                                   }
                                 }}
@@ -429,8 +498,8 @@
                                 <span
                                   className={`text-sm ml-2 ${
                                     team.active
-                                      ? "text-opacity-80"
-                                      : "text-gray-400"
+                                      ? 'text-opacity-80'
+                                      : 'text-gray-400'
                                   }`}
                                 >
                                   ({team.originalName})
@@ -452,11 +521,11 @@
                         <div
                           className={`p-1 rounded-full border-2 transition-all duration-200 ${
                             team.active
-                              ? "bg-white border-white"
-                              : "border-gray-600"
+                              ? 'bg-white border-white'
+                              : 'border-gray-600'
                           }`}
                         >
-                          {team.active && "✔"}
+                          {team.active && '✔'}
                         </div>
                       </div>
                     );
@@ -517,12 +586,34 @@
         };
 
         const renderStage = () => {
+          const remainingRiders = teams
+            .flatMap((team) => [
+              {
+                type: 'Rouleur',
+                teamName: team.name,
+                originalName: team.originalName,
+              },
+              {
+                type: 'Sprinteur',
+                teamName: team.name,
+                originalName: team.originalName,
+              },
+            ])
+            .filter(
+              (rider) =>
+                !finishedRiders.some(
+                  (fr) =>
+                    fr.teamName === rider.teamName &&
+                    fr.riderType === rider.type
+                )
+            );
+
           return (
             <div className="flex flex-col items-center p-4 min-h-screen">
               <div className="w-full max-w-md">
                 <div className="flex items-center justify-between mb-6">
                   <button
-                    onClick={() => setView("setup")}
+                    onClick={() => setView('setup')}
                     className="text-gray-500 hover:text-gray-400 transition"
                   >
                     ←
@@ -531,66 +622,56 @@
                     STAGE {currentStage} / {totalStages}
                   </h2>
                   <button
-                    onClick={() => setView("rankings")}
+                    onClick={() => setView('rankings')}
                     className="text-gray-500 hover:text-gray-400 transition"
                   >
                     🏆
                   </button>
                 </div>
+
                 <div className="bg-gray-800 p-4 rounded-xl shadow-sm mb-6">
-                  <h3 className="text-lg font-semibold text-gray-300 mb-2">
-                    Riders in Race
+                  <h3 className="text-lg font-semibold text-gray-300 mb-2 flex items-center justify-between">
+                    <span>Riders in Race - Round {roundNumber}</span>
+                    {finishedRiders.some(
+                      (r) => r.round === roundNumber && r.time === null
+                    ) && (
+                      <button
+                        onClick={handleNextRound}
+                        className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                      >
+                        {isProcessingRound
+                          ? '...'
+                          : 'Start New Round (+1:00 penalty)'}
+                      </button>
+                    )}
                   </h3>
                   <ul className="space-y-2">
-                    {teams
-                      .flatMap((team) => [
-                        {
-                          type: "Rouleur",
-                          teamName: team.name,
-                          originalName: team.originalName,
-                        },
-                        {
-                          type: "Sprinteur",
-                          teamName: team.name,
-                          originalName: team.originalName,
-                        },
-                      ])
-                      .filter(
-                        (rider) =>
-                          !finishedRiders.some(
-                            (fr) =>
-                              fr.teamName === rider.teamName &&
-                              fr.riderType === rider.type
-                          )
-                      )
-                      .map((rider, index) => (
-                        <li
-                          key={`${rider.teamName}-${rider.type}`}
-                          className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg shadow-sm"
+                    {remainingRiders.map((rider, index) => (
+                      <li
+                        key={`${rider.teamName}-${rider.type}`}
+                        className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg shadow-sm"
+                      >
+                        <div className="flex items-center space-x-4">
+                          {renderRiderAvatar(rider.teamName, rider.type)}
+                          <span className="font-medium">
+                            {rider.teamName}
+                            {rider.teamName !== rider.originalName && (
+                              <span className="text-gray-400 text-sm">
+                                {' '}
+                                ({rider.originalName})
+                              </span>
+                            )}{' '}
+                            {rider.type}
+                          </span>
+                        </div>
+                        <button
+                          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                          onClick={() => openModal(rider.teamName, rider.type)}
                         >
-                          <div className="flex items-center space-x-4">
-                            {renderRiderAvatar(rider.teamName, rider.type)}
-                            <span className="font-medium">
-                              {rider.teamName}
-                              {rider.teamName !== rider.originalName && (
-                                <span className="text-gray-400 text-sm">
-                                  {" "}
-                                  ({rider.originalName})
-                                </span>
-                              )}{" "}
-                              {rider.type}
-                            </span>
-                          </div>
-                          <button
-                            className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
-                            onClick={() =>
-                              openModal(rider.teamName, rider.type)
-                            }
-                          >
-                            FINISH
-                          </button>
-                        </li>
-                      ))}
+                          FINISH
+                        </button>
+                      </li>
+                    ))}
                   </ul>
                 </div>
 
@@ -601,7 +682,11 @@
                     </h3>
                     <ul className="space-y-2">
                       {finishedRiders
-                        .sort((a, b) => a.time - b.time)
+                        .sort(
+                          (a, b) =>
+                            (a.time === null) - (b.time === null) ||
+                            a.time - b.time
+                        )
                         .map((rider, index) => (
                           <li
                             key={`${rider.teamName}-${rider.riderType}`}
@@ -616,7 +701,7 @@
                                 rider.riderType
                               )}
                               <span className="font-medium">
-                                {rider.teamName}{" "}
+                                {rider.teamName}{' '}
                                 {teams.find((t) => t.name === rider.teamName)
                                   ?.name !==
                                   teams.find((t) => t.name === rider.teamName)
@@ -630,12 +715,17 @@
                                     }
                                     )
                                   </span>
-                                )}{" "}
+                                )}{' '}
                                 {rider.riderType}
                               </span>
                             </div>
                             <span className="text-gray-400 text-sm">
                               Time: {formatTime(rider.time)}
+                              <br />
+                              <span className="text-xs">
+                                Round: {rider.round}, Finish Row:{' '}
+                                {rider.finishRow}
+                              </span>
                             </span>
                           </li>
                         ))}
@@ -643,13 +733,13 @@
                   </div>
                 )}
 
-                {finishedRiders.length === teams.length * 2 && (
+                {remainingRiders.length === 0 && (
                   <button
                     className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
                     onClick={handleNextStage}
                     disabled={loading}
                   >
-                    {loading ? "..." : "→"}
+                    {loading ? '...' : '→'}
                     <span className="font-bold">NEXT STAGE</span>
                   </button>
                 )}
@@ -680,23 +770,25 @@
                     </div>
 
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between">
-                        <label className="font-semibold text-gray-300">
-                          Finish Time (s)
+                      <div className="flex flex-col">
+                        <label className="font-semibold text-gray-300 mb-2">
+                          How many rows after the finish line?
                         </label>
-                        <input
-                          type="number"
-                          value={modalTime.seconds}
-                          onChange={(e) =>
-                            setModalTime({
-                              seconds: Math.max(
-                                0,
-                                parseInt(e.target.value) || 0
-                              ),
-                            })
-                          }
-                          className="w-24 px-3 py-2 border rounded-lg text-center bg-gray-700 text-white border-gray-600"
-                        />
+                        <div className="flex justify-between space-x-2">
+                          {[5, 4, 3, 2, 1].map((num) => (
+                            <button
+                              key={num}
+                              onClick={() => setModalFinishRows(num)}
+                              className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
+                                modalFinishRows === num
+                                  ? 'bg-indigo-600 text-white'
+                                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                              }`}
+                            >
+                              {num}
+                            </button>
+                          ))}
+                        </div>
                       </div>
 
                       <div className="flex items-center justify-between">
@@ -762,7 +854,7 @@
                 </h2>
                 <p className="text-gray-300">Calculating rankings...</p>
                 <button
-                  onClick={() => setView("stage")}
+                  onClick={() => setView('stage')}
                   className="mt-4 px-4 py-2 rounded-lg bg-gray-700 text-gray-100 hover:bg-gray-600"
                 >
                   Go Back
@@ -776,7 +868,7 @@
               <div className="w-full max-w-md">
                 <div className="flex items-center justify-between mb-6">
                   <button
-                    onClick={() => setView("stage")}
+                    onClick={() => setView('stage')}
                     className="text-gray-500 hover:text-gray-400 transition"
                   >
                     ←
@@ -810,9 +902,9 @@
                               #{index + 1}
                             </span>
                             <div className="flex items-center">
-                              {renderRiderAvatar(team.name, "Rouleur")}
+                              {renderRiderAvatar(team.name, 'Rouleur')}
                               <span className="font-medium ml-4 text-gray-100">
-                                {team.name}{" "}
+                                {team.name}{' '}
                                 {team.name !== team.originalName && (
                                   <span className="text-gray-400 text-sm">
                                     ({team.originalName})
@@ -846,9 +938,9 @@
                               #{index + 1}
                             </span>
                             <div className="flex items-center">
-                              {renderRiderAvatar(team.name, "Sprinteur")}
+                              {renderRiderAvatar(team.name, 'Sprinteur')}
                               <span className="font-medium ml-4 text-gray-100">
-                                {team.name}{" "}
+                                {team.name}{' '}
                                 {team.name !== team.originalName && (
                                   <span className="text-gray-400 text-sm">
                                     ({team.originalName})
@@ -882,9 +974,9 @@
                               #{index + 1}
                             </span>
                             <div className="flex items-center">
-                              {renderRiderAvatar(team.name, "Rouleur")}
+                              {renderRiderAvatar(team.name, 'Rouleur')}
                               <span className="font-medium ml-4 text-gray-100">
-                                {team.name}{" "}
+                                {team.name}{' '}
                                 {team.name !== team.originalName && (
                                   <span className="text-gray-400 text-sm">
                                     ({team.originalName})
@@ -943,7 +1035,7 @@
       }
 
       // Use createRoot for React 18 compatibility
-      const root = ReactDOM.createRoot(document.getElementById("root"));
+      const root = ReactDOM.createRoot(document.getElementById('root'));
       root.render(<App />);
     </script>
   </body>
