@@ -281,6 +281,7 @@
 
           const updatedFinished = [...finishedRiders];
 
+          // Group riders by consecutive finish rows
           let packs = [];
           if (ridersInCurrentRound.length > 0) {
             let currentPack = [ridersInCurrentRound[0]];
@@ -456,13 +457,13 @@
 
           return (
             <div className="flex flex-col items-center p-4">
-              <div className="w-full max-w-md flex items-center justify-between">
-                <h2 className="text-2xl font-bold mb-6 text-gray-100">
+              <div className="w-full max-w-md flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-100">
                   Set Up Grand Tour
                 </h2>
                 <button
                   onClick={() => setShowRulesModal(true)}
-                  className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition mb-4"
+                  className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
                 >
                   📖 Rules
                 </button>
@@ -1165,6 +1166,75 @@
         return (
           <div className="min-h-screen bg-gray-900 font-sans antialiased text-gray-100">
             {currentView}
+            {showRulesModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-gray-100">
+                      Game Rules & Resources
+                    </h3>
+                    <button
+                      onClick={() => setShowRulesModal(false)}
+                      className="text-gray-400 hover:text-gray-300"
+                    >
+                      X
+                    </button>
+                  </div>
+                  <ul className="space-y-4 text-left">
+                    <li>
+                      <a
+                        href="https://cdn.1j1ju.com/medias/2c/50/2b-flamme-rouge-rulebook.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Base Game Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://cdn.1j1ju.com/medias/94/37/1a-flamme-rouge-peloton-rulebook.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Peloton Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://tesera.ru/images/items/1383121/Flamme_Rouge_Meteo_rules_for_internet_1.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Meteo Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://lautapelit.mycashflow.fi/files/Online%20rules/Flamme%20Grand%20Tour%20rulebook_280x280_ENG_2024-10-08_web.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Grand Tour Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://notebooklm.google.com/notebook/e278d56c-d5b8-40e5-aff6-9e7e786eb29d"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        AI Rules Assistant
+                      </a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            )}
           </div>
         );
       }
