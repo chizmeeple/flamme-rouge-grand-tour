@@ -45,6 +45,7 @@
         const [isProcessingRound, setIsProcessingRound] = useState(false);
         const [showConfirmModal, setShowConfirmModal] = useState(false);
         const [showRulesModal, setShowRulesModal] = useState(false);
+        const [finishType, setFinishType] = useState('flatland');
 
         // Load data from localStorage on initial render
         useEffect(() => {
@@ -61,6 +62,7 @@
               setRankings(savedData.rankings);
               setAddedTime(savedData.addedTime || 0);
               setRoundNumber(savedData.roundNumber || 1);
+              setFinishType(savedData.finishType || 'flatland');
               setLoading(false);
             } else {
               setTeams([
@@ -114,6 +116,7 @@
               setRankings(null);
               setAddedTime(0);
               setRoundNumber(1);
+              setFinishType('flatland');
               setLoading(false);
             }
           } catch (e) {
@@ -135,6 +138,7 @@
               rankings,
               addedTime,
               roundNumber,
+              finishType,
             };
             localStorage.setItem('flammeRougeTour', JSON.stringify(dataToSave));
           }
@@ -148,6 +152,7 @@
           rankings,
           addedTime,
           roundNumber,
+          finishType,
         ]);
 
         // Helper function to get team color classes
@@ -241,7 +246,7 @@
         // Logic for the Stage view
         const openModal = (teamName, riderType) => {
           setModalRider({ teamName, riderType });
-          setModalFinishRows(5);
+          setModalFinishRows(finishType === 'flatland' ? 5 : 4);
           setModalTokens({ sprint: 0, mountain: 0 });
           setShowModal(true);
         };
@@ -274,14 +279,13 @@
           if (isProcessingRound) return;
           setIsProcessingRound(true);
 
-          const secondsMap = { 5: 0, 4: 10, 3: 20, 2: 30, 1: 60 };
+          const secondsMap = [0, 10, 20, 30, 40];
           const ridersInCurrentRound = finishedRiders
             .filter((r) => r.round === roundNumber && r.time === null)
             .sort((a, b) => b.finishRow - a.finishRow);
 
           const updatedFinished = [...finishedRiders];
 
-          // Group riders by consecutive finish rows
           let packs = [];
           if (ridersInCurrentRound.length > 0) {
             let currentPack = [ridersInCurrentRound[0]];
@@ -307,7 +311,9 @@
                 (max, r) => Math.max(max, r.finishRow),
                 0
               );
-              const secondsForPack = secondsMap[fastestFinishRow];
+              const numberOfPossibleRows = finishType === 'flatland' ? 5 : 4;
+              const secondsForPack =
+                secondsMap[numberOfPossibleRows - fastestFinishRow];
               const timeForPack = addedTime * 60 + secondsForPack;
 
               pack.forEach((riderToUpdate) => {
@@ -586,6 +592,31 @@
                     ▲
                   </button>
                 </div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-300">
+                  Finish Type
+                </h3>
+                <div className="flex justify-between space-x-4 mb-6">
+                  <button
+                    onClick={() => setFinishType('flatland')}
+                    className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
+                      finishType === 'flatland'
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    Flatland
+                  </button>
+                  <button
+                    onClick={() => setFinishType('ascent')}
+                    className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
+                      finishType === 'ascent'
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    Ascent
+                  </button>
+                </div>
                 {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
                 <button
                   className="w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
@@ -638,6 +669,9 @@
                     fr.riderType === rider.type
                 )
             );
+
+          const rowsForFinishType =
+            finishType === 'flatland' ? [5, 4, 3, 2, 1] : [4, 3, 2, 1];
 
           return (
             <div className="flex flex-col items-center p-4 min-h-screen">
@@ -812,7 +846,7 @@
                           How many rows after the finish line?
                         </label>
                         <div className="flex justify-between space-x-2">
-                          {[5, 4, 3, 2, 1].map((num) => (
+                          {rowsForFinishType.map((num) => (
                             <button
                               key={num}
                               onClick={() => setModalFinishRows(num)}
