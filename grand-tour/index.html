@@ -513,6 +513,27 @@
           return `${min}:${sec < 10 ? '0' : ''}${sec}`;
         };
 
+        const formatTimeDisplay = (rider, index, finishedRiders) => {
+          if (rider.time === null) return 'TBC';
+
+          if (index === 0) {
+            return 'Stage Winner';
+          }
+
+          // Find the winner's time
+          const winner = finishedRiders.find((r) => r.time !== null);
+          if (!winner) return formatTime(rider.time);
+
+          const timeDiff = rider.time - winner.time;
+          if (timeDiff === 0) {
+            return '+0\'00"';
+          }
+
+          const min = Math.floor(timeDiff / 60);
+          const sec = timeDiff % 60;
+          return `+${min}'${sec < 10 ? '0' : ''}${sec}"`;
+        };
+
         const renderSetup = () => {
           const inactiveClasses = 'bg-gray-800';
           const inactiveTextClasses = 'text-gray-100';
@@ -935,7 +956,12 @@
                             </div>
                             <div className="flex items-center space-x-3">
                               <span className="text-gray-400 text-sm">
-                                Time: {formatTime(rider.time)}
+                                Time:{' '}
+                                {formatTimeDisplay(
+                                  rider,
+                                  index,
+                                  finishedRiders
+                                )}
                                 <br />
                                 <span className="text-xs">
                                   Round: {rider.round}, Finish: Row{' '}
