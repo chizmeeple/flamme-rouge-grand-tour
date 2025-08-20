@@ -933,20 +933,49 @@
                                 {rider.riderType}
                               </span>
                             </div>
-                            <span className="text-gray-400 text-sm">
-                              Time: {formatTime(rider.time)}
-                              <br />
-                              <span className="text-xs">
-                                Round: {rider.round}, Finish: Row{' '}
-                                {rider.finishRow.row}, Col {rider.finishRow.col}
-                                {rider.exhaustionCards !== undefined && (
-                                  <>
-                                    <br />
-                                    Exhaustion: {rider.exhaustionCards} cards
-                                  </>
-                                )}
+                            <div className="flex items-center space-x-3">
+                              <span className="text-gray-400 text-sm">
+                                Time: {formatTime(rider.time)}
+                                <br />
+                                <span className="text-xs">
+                                  Round: {rider.round}, Finish: Row{' '}
+                                  {rider.finishRow.row}, Col{' '}
+                                  {rider.finishRow.col}
+                                  {rider.exhaustionCards !== undefined && (
+                                    <>
+                                      <br />
+                                      Exhaustion: {rider.exhaustionCards} cards
+                                    </>
+                                  )}
+                                </span>
                               </span>
-                            </span>
+                              {index < 3 && (
+                                <span className="flex flex-col items-center space-y-1">
+                                  <span className="text-2xl">
+                                    {index === 0
+                                      ? '🥇'
+                                      : index === 1
+                                      ? '🥈'
+                                      : '🥉'}
+                                  </span>
+                                  <span
+                                    className={`text-xs font-bold ${
+                                      index === 0
+                                        ? 'text-yellow-400'
+                                        : index === 1
+                                        ? 'text-gray-300'
+                                        : 'text-amber-600'
+                                    }`}
+                                  >
+                                    {index === 0
+                                      ? '1st'
+                                      : index === 1
+                                      ? '2nd'
+                                      : '3rd'}
+                                  </span>
+                                </span>
+                              )}
+                            </div>
                           </li>
                         ))}
                     </ul>
