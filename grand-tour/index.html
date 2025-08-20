@@ -324,8 +324,8 @@
               if (a.finishRow.row !== b.finishRow.row) {
                 return b.finishRow.row - a.finishRow.row;
               }
-              // If same row, sort by column (left to right)
-              return a.finishRow.col - b.finishRow.col;
+              // If same row, sort by column (right to left) - rightmost column is furthest forward
+              return b.finishRow.col - a.finishRow.col;
             });
 
           const updatedFinished = [...finishedRiders];
