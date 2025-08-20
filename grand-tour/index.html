@@ -37,6 +37,7 @@
           sprint: 0,
           mountain: 0,
         });
+        const [modalExhaustionCards, setModalExhaustionCards] = useState(0);
         const [error, setError] = useState(null);
         const [rankings, setRankings] = useState(null);
         const [editingTeamId, setEditingTeamId] = useState(null);
@@ -250,6 +251,7 @@
           setModalRider({ teamName, riderType });
           setModalFinishRows(finishType === 'flatland' ? 5 : 4);
           setModalTokens({ sprint: 0, mountain: 0 });
+          setModalExhaustionCards(0);
           setShowModal(true);
         };
 
@@ -271,6 +273,7 @@
             mountain: modalTokens.mountain,
             round: roundNumber,
             finishRow: modalFinishRows,
+            exhaustionCards: modalExhaustionCards,
           };
 
           setFinishedRiders((prev) => [...prev, newFinishedRider]);
@@ -357,7 +360,21 @@
               if (index === 0) podiumPoints = 3;
               else if (index === 1) podiumPoints = 2;
               else if (index === 2) podiumPoints = 1;
-              return { ...rider, podium: podiumPoints };
+
+              // Between stages, each rider returns half of their unplayed Exhaustion cards (rounded down)
+              // Note: played Exhaustion cards were already returned during the stage
+              const exhaustionCardsToReturn = Math.floor(
+                (rider.exhaustionCards || 0) / 2
+              );
+              const remainingExhaustionCards =
+                (rider.exhaustionCards || 0) - exhaustionCardsToReturn;
+
+              return {
+                ...rider,
+                podium: podiumPoints,
+                exhaustionCards: remainingExhaustionCards,
+                exhaustionCardsReturned: exhaustionCardsToReturn,
+              };
             }
           );
 
@@ -807,6 +824,12 @@
                               <span className="text-xs">
                                 Round: {rider.round}, Finish Row:{' '}
                                 {rider.finishRow}
+                                {rider.exhaustionCards !== undefined && (
+                                  <>
+                                    <br />
+                                    Exhaustion: {rider.exhaustionCards} cards
+                                  </>
+                                )}
                               </span>
                             </span>
                           </li>
@@ -871,6 +894,27 @@
                             </button>
                           ))}
                         </div>
+                      </div>
+
+                      <div className="text-xs text-gray-400 text-center">
+                        Between stages, riders return half of their unplayed
+                        Exhaustion cards (rounded down)
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <label className="font-semibold text-gray-300">
+                          Unplayed Exhaustion Cards
+                        </label>
+                        <input
+                          type="number"
+                          value={modalExhaustionCards}
+                          onChange={(e) =>
+                            setModalExhaustionCards(
+                              Math.max(0, parseInt(e.target.value) || 0)
+                            )
+                          }
+                          className="w-24 px-3 py-2 border rounded-lg text-center bg-gray-700 text-white border-gray-600"
+                        />
                       </div>
 
                       <div className="flex items-center justify-between">
