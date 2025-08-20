@@ -745,7 +745,7 @@
 
           return (
             <div className="flex flex-col items-center p-4 min-h-screen">
-              <div className="w-full max-w-md">
+              <div className="w-full max-w-xl">
                 <div className="flex items-center justify-between mb-6">
                   <button
                     onClick={() => setView('setup')}
@@ -828,7 +828,7 @@
                         Finish Positions
                       </h4>
                       <div className="flex justify-center">
-                        <div className="bg-gray-800 p-2 rounded-lg relative">
+                        <div className="bg-gray-800 p-2 rounded-lg relative w-full max-w-2xl">
                           {/* Double-line border on the right to indicate "slightly further forward" */}
                           <div className="absolute right-0 top-0 bottom-0 w-2 flex flex-col">
                             <div className="flex-1 border-r-2 border-white"></div>
@@ -841,7 +841,8 @@
                                 const rider = finishedRiders.find(
                                   (r) =>
                                     r.finishRow.row === row &&
-                                    r.finishRow.col === col
+                                    r.finishRow.col === col &&
+                                    r.round === roundNumber
                                 );
                                 return (
                                   <div
