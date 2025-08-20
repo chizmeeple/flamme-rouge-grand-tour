@@ -6,7 +6,7 @@
     <title>Flamme Rouge Grand Tour</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/reacåt-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -33,7 +33,10 @@
         const [showModal, setShowModal] = useState(false);
         const [modalRider, setModalRider] = useState(null);
         const [modalFinishRows, setModalFinishRows] = useState(5);
-        const [modalTokens, setModalTokens] = useState({ sprint: 0, mountain: 0 });
+        const [modalTokens, setModalTokens] = useState({
+          sprint: 0,
+          mountain: 0,
+        });
         const [error, setError] = useState(null);
         const [rankings, setRankings] = useState(null);
         const [editingTeamId, setEditingTeamId] = useState(null);
@@ -43,13 +46,15 @@
         const [showConfirmModal, setShowConfirmModal] = useState(false);
         const [showRulesModal, setShowRulesModal] = useState(false);
         const [finishType, setFinishType] = useState('flatland');
-        const [showResetConfirmModal, setShowResetConfirmModal] = useState(false);
-
+        const [showResetConfirmModal, setShowResetConfirmModal] =
+          useState(false);
 
         // Load data from localStorage on initial render
         useEffect(() => {
           try {
-            const savedData = JSON.parse(localStorage.getItem('flammeRougeTour'));
+            const savedData = JSON.parse(
+              localStorage.getItem('flammeRougeTour')
+            );
             if (savedData) {
               setTeams(savedData.teams);
               setTotalStages(savedData.totalStages);
@@ -63,12 +68,48 @@
               setLoading(false);
             } else {
               setTeams([
-                { id: 'red', name: 'Red Team', originalName: 'Red Team', active: true, history: [] },
-                { id: 'blue', name: 'Blue Team', originalName: 'Blue Team', active: true, history: [] },
-                { id: 'green', name: 'Green Team', originalName: 'Green Team', active: true, history: [] },
-                { id: 'black', name: 'Black Team', originalName: 'Black Team', active: true, history: [] },
-                { id: 'white', name: 'White Team', originalName: 'White Team', active: true, history: [] },
-                { id: 'pink', name: 'Pink Team', originalName: 'Pink Team', active: true, history: [] }
+                {
+                  id: 'red',
+                  name: 'Red Team',
+                  originalName: 'Red Team',
+                  active: true,
+                  history: [],
+                },
+                {
+                  id: 'blue',
+                  name: 'Blue Team',
+                  originalName: 'Blue Team',
+                  active: true,
+                  history: [],
+                },
+                {
+                  id: 'green',
+                  name: 'Green Team',
+                  originalName: 'Green Team',
+                  active: true,
+                  history: [],
+                },
+                {
+                  id: 'black',
+                  name: 'Black Team',
+                  originalName: 'Black Team',
+                  active: true,
+                  history: [],
+                },
+                {
+                  id: 'white',
+                  name: 'White Team',
+                  originalName: 'White Team',
+                  active: true,
+                  history: [],
+                },
+                {
+                  id: 'pink',
+                  name: 'Pink Team',
+                  originalName: 'Pink Team',
+                  active: true,
+                  history: [],
+                },
               ]);
               setTotalStages(3);
               setCurrentStage(1);
@@ -81,8 +122,8 @@
               setLoading(false);
             }
           } catch (e) {
-            console.error("Failed to load data from localStorage", e);
-            setError("Failed to load tour data. Please try again.");
+            console.error('Failed to load data from localStorage', e);
+            setError('Failed to load tour data. Please try again.');
             setLoading(false);
           }
         }, []);
@@ -99,39 +140,87 @@
               rankings,
               addedTime,
               roundNumber,
-              finishType
+              finishType,
             };
             localStorage.setItem('flammeRougeTour', JSON.stringify(dataToSave));
           }
-        }, [teams, totalStages, currentStage, finishedRiders, view, rankings, addedTime, roundNumber, finishType]);
-
-
+        }, [
+          loading,
+          teams,
+          totalStages,
+          currentStage,
+          finishedRiders,
+          view,
+          rankings,
+          addedTime,
+          roundNumber,
+          finishType,
+        ]);
 
         // Helper function to get team color classes
         const getTeamColorClasses = (originalName) => {
           switch (originalName) {
-            case 'Red Team': return { bg: 'bg-red-600', text: 'text-white', hover: 'hover:bg-red-700' };
-            case 'Blue Team': return { bg: 'bg-blue-600', text: 'text-white', hover: 'hover:bg-blue-700' };
-            case 'Green Team': return { bg: 'bg-green-600', text: 'text-white', hover: 'hover:bg-green-700' };
-            case 'Black Team': return { bg: 'bg-gray-800', text: 'text-white', hover: 'hover:bg-gray-900' };
-            case 'White Team': return { bg: 'bg-gray-200', text: 'text-gray-900', hover: 'hover:bg-gray-300' };
-            case 'Pink Team': return { bg: 'bg-pink-600', text: 'text-white', hover: 'hover:bg-pink-700' };
-            default: return { bg: 'bg-gray-500', text: 'text-white', hover: 'hover:bg-gray-600' };
+            case 'Red Team':
+              return {
+                bg: 'bg-red-600',
+                text: 'text-white',
+                hover: 'hover:bg-red-700',
+              };
+            case 'Blue Team':
+              return {
+                bg: 'bg-blue-600',
+                text: 'text-white',
+                hover: 'hover:bg-blue-700',
+              };
+            case 'Green Team':
+              return {
+                bg: 'bg-green-600',
+                text: 'text-white',
+                hover: 'hover:bg-green-700',
+              };
+            case 'Black Team':
+              return {
+                bg: 'bg-gray-800',
+                text: 'text-white',
+                hover: 'hover:bg-gray-900',
+              };
+            case 'White Team':
+              return {
+                bg: 'bg-gray-200',
+                text: 'text-gray-900',
+                hover: 'hover:bg-gray-300',
+              };
+            case 'Pink Team':
+              return {
+                bg: 'bg-pink-600',
+                text: 'text-white',
+                hover: 'hover:bg-pink-700',
+              };
+            default:
+              return {
+                bg: 'bg-gray-500',
+                text: 'text-white',
+                hover: 'hover:bg-gray-600',
+              };
           }
         };
 
         // Logic for the Setup view
         const toggleTeam = (teamId) => {
-          setTeams(prevTeams => prevTeams.map(team =>
-            team.id === teamId ? { ...team, active: !team.active } : team
-          ));
+          setTeams((prevTeams) =>
+            prevTeams.map((team) =>
+              team.id === teamId ? { ...team, active: !team.active } : team
+            )
+          );
         };
 
         const handleTeamNameChange = (e, teamId) => {
-            const newName = e.target.value;
-            setTeams(prevTeams => prevTeams.map(team =>
-                team.id === teamId ? { ...team, name: newName } : team
-            ));
+          const newName = e.target.value;
+          setTeams((prevTeams) =>
+            prevTeams.map((team) =>
+              team.id === teamId ? { ...team, name: newName } : team
+            )
+          );
         };
 
         const handleSaveName = () => {
@@ -139,12 +228,12 @@
         };
 
         const handleStartTour = () => {
-          const activeTeams = teams.filter(t => t.active);
+          const activeTeams = teams.filter((t) => t.active);
           if (activeTeams.length === 0) {
-            setError("Please select at least one team to start the tour.");
+            setError('Please select at least one team to start the tour.');
             return;
           }
-          const initialTeams = activeTeams.map(team => ({
+          const initialTeams = activeTeams.map((team) => ({
             ...team,
             history: [],
           }));
@@ -184,7 +273,7 @@
             finishRow: modalFinishRows,
           };
 
-          setFinishedRiders(prev => [...prev, newFinishedRider]);
+          setFinishedRiders((prev) => [...prev, newFinishedRider]);
           closeModal();
         };
 
@@ -192,43 +281,65 @@
           if (isProcessingRound) return;
           setIsProcessingRound(true);
 
-          const secondsMap = { flatland: { 5: 0, 4: 10, 3: 20, 2: 30, 1: 40 }, ascent: { 4: 0, 3: 10, 2: 20, 1: 30 } };
-          const ridersInCurrentRound = finishedRiders.filter(r => r.round === roundNumber && r.time === null).sort((a, b) => b.finishRow - a.finishRow);
+          const secondsMap = {
+            flatland: { 5: 0, 4: 10, 3: 20, 2: 30, 1: 40 },
+            ascent: { 4: 0, 3: 10, 2: 20, 1: 30 },
+          };
+          const ridersInCurrentRound = finishedRiders
+            .filter((r) => r.round === roundNumber && r.time === null)
+            .sort((a, b) => b.finishRow - a.finishRow);
 
           const updatedFinished = [...finishedRiders];
 
           let packs = [];
           if (ridersInCurrentRound.length > 0) {
-              let currentPack = [ridersInCurrentRound[0]];
-              for (let i = 1; i < ridersInCurrentRound.length; i++) {
-                  if (ridersInCurrentRound[i].finishRow === ridersInCurrentRound[i - 1].finishRow || ridersInCurrentRound[i].finishRow === ridersInCurrentRound[i - 1].finishRow - 1) {
-                      currentPack.push(ridersInCurrentRound[i]);
-                  } else {
-                      packs.push(currentPack);
-                      currentPack = [ridersInCurrentRound[i]];
-                  }
+            let currentPack = [ridersInCurrentRound[0]];
+            for (let i = 1; i < ridersInCurrentRound.length; i++) {
+              if (
+                ridersInCurrentRound[i].finishRow ===
+                  ridersInCurrentRound[i - 1].finishRow ||
+                ridersInCurrentRound[i].finishRow ===
+                  ridersInCurrentRound[i - 1].finishRow - 1
+              ) {
+                currentPack.push(ridersInCurrentRound[i]);
+              } else {
+                packs.push(currentPack);
+                currentPack = [ridersInCurrentRound[i]];
               }
-              packs.push(currentPack);
+            }
+            packs.push(currentPack);
           }
 
-          packs.forEach(pack => {
-              if (pack.length > 0) {
-                  const fastestFinishRow = pack.reduce((max, r) => Math.max(max, r.finishRow), 0);
-                  const secondsForPack = secondsMap[finishType][fastestFinishRow];
-                  const timeForPack = addedTime * 60 + secondsForPack;
+          packs.forEach((pack) => {
+            if (pack.length > 0) {
+              const fastestFinishRow = pack.reduce(
+                (max, r) => Math.max(max, r.finishRow),
+                0
+              );
+              const secondsForPack = secondsMap[finishType][fastestFinishRow];
+              const timeForPack = addedTime * 60 + secondsForPack;
 
-                  pack.forEach(riderToUpdate => {
-                      const index = updatedFinished.findIndex(r => r.teamName === riderToUpdate.teamName && r.riderType === riderToUpdate.riderType && r.round === riderToUpdate.round && r.time === null);
-                      if (index !== -1) {
-                          updatedFinished[index] = { ...updatedFinished[index], time: timeForPack };
-                      }
-                  });
-              }
+              pack.forEach((riderToUpdate) => {
+                const index = updatedFinished.findIndex(
+                  (r) =>
+                    r.teamName === riderToUpdate.teamName &&
+                    r.riderType === riderToUpdate.riderType &&
+                    r.round === riderToUpdate.round &&
+                    r.time === null
+                );
+                if (index !== -1) {
+                  updatedFinished[index] = {
+                    ...updatedFinished[index],
+                    time: timeForPack,
+                  };
+                }
+              });
+            }
           });
 
           setFinishedRiders(updatedFinished);
-          setAddedTime(prev => prev + 1);
-          setRoundNumber(prev => prev + 1);
+          setAddedTime((prev) => prev + 1);
+          setRoundNumber((prev) => prev + 1);
           setIsProcessingRound(false);
           setShowConfirmModal(false);
         };
@@ -236,24 +347,35 @@
         const handleNextStage = () => {
           setLoading(true);
 
-          const sortedFinishedRiders = [...finishedRiders].sort((a, b) => a.time - b.time);
+          const sortedFinishedRiders = [...finishedRiders].sort(
+            (a, b) => a.time - b.time
+          );
 
-          const updatedFinishedRiders = sortedFinishedRiders.map((rider, index) => {
-            let podiumPoints = 0;
-            if (index === 0) podiumPoints = 3;
-            else if (index === 1) podiumPoints = 2;
-            else if (index === 2) podiumPoints = 1;
-            return { ...rider, podium: podiumPoints };
-          });
+          const updatedFinishedRiders = sortedFinishedRiders.map(
+            (rider, index) => {
+              let podiumPoints = 0;
+              if (index === 0) podiumPoints = 3;
+              else if (index === 1) podiumPoints = 2;
+              else if (index === 2) podiumPoints = 1;
+              return { ...rider, podium: podiumPoints };
+            }
+          );
 
-          const newTeams = teams.map(team => {
+          const newTeams = teams.map((team) => {
             const updatedTeam = { ...team };
             const stageResults = {
-              rouleur: updatedFinishedRiders.find(r => r.teamName === team.name && r.riderType === 'Rouleur'),
-              sprinteur: updatedFinishedRiders.find(r => r.teamName === team.name && r.riderType === 'Sprinteur'),
+              rouleur: updatedFinishedRiders.find(
+                (r) => r.teamName === team.name && r.riderType === 'Rouleur'
+              ),
+              sprinteur: updatedFinishedRiders.find(
+                (r) => r.teamName === team.name && r.riderType === 'Sprinteur'
+              ),
             };
 
-            updatedTeam.history.push({ stage: currentStage, results: stageResults });
+            updatedTeam.history.push({
+              stage: currentStage,
+              results: stageResults,
+            });
             return updatedTeam;
           });
 
@@ -277,24 +399,40 @@
         const calculateFinalRankings = (tourTeams) => {
           const calculateTotals = (team) => {
             const totals = { time: 0, podium: 0, sprint: 0, mountain: 0 };
-            team.history.forEach(stage => {
-              const rouleurTime = stage.results.rouleur ? stage.results.rouleur.time : 0;
-              const sprinteurTime = stage.results.sprinteur ? stage.results.sprinteur.time : 0;
-              totals.time += (rouleurTime + sprinteurTime);
-              const rouleurPodium = stage.results.rouleur ? stage.results.rouleur.podium : 0;
-              const sprinteurPodium = stage.results.sprinteur ? stage.results.sprinteur.podium : 0;
-              totals.podium += (rouleurPodium + sprinteurPodium);
-              const rouleurSprint = stage.results.rouleur ? stage.results.rouleur.sprint : 0;
-              const sprinteurSprint = stage.results.sprinteur ? stage.results.sprinteur.sprint : 0;
-              totals.sprint += (rouleurSprint + sprinteurSprint);
-              const rouleurMountain = stage.results.rouleur ? stage.results.rouleur.mountain : 0;
-              const sprinteurMountain = stage.results.sprinteur ? stage.results.sprinteur.mountain : 0;
-              totals.mountain += (rouleurMountain + sprinteurMountain);
+            team.history.forEach((stage) => {
+              const rouleurTime = stage.results.rouleur
+                ? stage.results.rouleur.time
+                : 0;
+              const sprinteurTime = stage.results.sprinteur
+                ? stage.results.sprinteur.time
+                : 0;
+              totals.time += rouleurTime + sprinteurTime;
+              const rouleurPodium = stage.results.rouleur
+                ? stage.results.rouleur.podium
+                : 0;
+              const sprinteurPodium = stage.results.sprinteur
+                ? stage.results.sprinteur.podium
+                : 0;
+              totals.podium += rouleurPodium + sprinteurPodium;
+              const rouleurSprint = stage.results.rouleur
+                ? stage.results.rouleur.sprint
+                : 0;
+              const sprinteurSprint = stage.results.sprinteur
+                ? stage.results.sprinteur.sprint
+                : 0;
+              totals.sprint += rouleurSprint + sprinteurSprint;
+              const rouleurMountain = stage.results.rouleur
+                ? stage.results.rouleur.mountain
+                : 0;
+              const sprinteurMountain = stage.results.sprinteur
+                ? stage.results.sprinteur.mountain
+                : 0;
+              totals.mountain += rouleurMountain + sprinteurMountain;
             });
             return totals;
           };
 
-          const teamTotals = tourTeams.map(team => {
+          const teamTotals = tourTeams.map((team) => {
             const totals = calculateTotals(team);
             return { ...team, ...totals };
           });
@@ -306,7 +444,7 @@
           setRankings({
             gc: gcRankings,
             sc: scRankings,
-            mc: mcRankings
+            mc: mcRankings,
           });
         };
 
@@ -322,500 +460,856 @@
           return `${min}:${sec < 10 ? '0' : ''}${sec}`;
         };
 
-        // Missing helper functions
-        const renderRiderAvatar = (teamName, riderType) => {
-          const team = teams.find(t => t.name === teamName);
-          if (!team) return null;
-          const { bg, text } = getTeamColorClasses(team.originalName);
-
-          return (
-            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-700 border-2 border-gray-600 flex items-center justify-center">
-                <span className="text-2xl">🚴</span>
-                <div className={`absolute top-0 left-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${bg} ${text} border border-gray-900`}>
-                    {riderType.charAt(0)}
-                </div>
-            </div>
-          );
-        };
-
         const renderSetup = () => {
           const inactiveClasses = 'bg-gray-800';
           const inactiveTextClasses = 'text-gray-100';
 
           return (
-          <div className="flex flex-col items-center p-4">
-            <div className="w-full max-w-md flex items-center justify-between mb-4">
-              <h2 className="text-2xl font-bold text-gray-100">Set Up Grand Tour</h2>
-              <div className="flex items-center space-x-2">
-                  <button onClick={() => setShowRulesModal(true)} className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition">
-                  📖 Rules
+            <div className="flex flex-col items-center p-4">
+              <div className="w-full max-w-md flex items-center justify-between mb-4">
+                <h2 className="text-2xl font-bold text-gray-100">
+                  Set Up Grand Tour
+                </h2>
+                <div className="flex items-center space-x-2">
+                  <button
+                    onClick={() => setShowRulesModal(true)}
+                    className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
+                  >
+                    📖 Rules
                   </button>
                   <button
-                      onClick={() => setShowResetConfirmModal(true)}
-                      className="px-3 py-1 rounded-lg text-sm bg-red-600 text-white hover:bg-red-700 transition"
+                    onClick={() => setShowResetConfirmModal(true)}
+                    className="px-3 py-1 rounded-lg text-sm bg-red-600 text-white hover:bg-red-700 transition"
                   >
-                      Reset Tour
+                    Reset Tour
                   </button>
+                </div>
               </div>
-            </div>
-            <div className="w-full max-w-md">
-              <h3 className="text-xl font-semibold mb-2 text-gray-300">Select Teams</h3>
-              <div className="flex flex-col space-y-2 mb-6">
-                {teams.map(team => {
-                  const color = getTeamColorClasses(team.originalName);
-                  const checkmarkColor = team.id === 'white' ? 'text-gray-900' : 'text-white';
-                  return (
-                    <div
-                      key={team.id}
-                      className={`flex items-center justify-between p-3 rounded-xl cursor-pointer shadow-sm transition-all duration-200 ${team.active ? `${color.bg} ${color.hover}` : inactiveClasses}`}
-                      onClick={() => toggleTeam(team.id)}
-                    >
-                      <div className="flex items-center space-x-2 w-full" onClick={(e) => e.stopPropagation()}>
-                        {editingTeamId === team.id ? (
+              <div className="w-full max-w-md">
+                <h3 className="text-xl font-semibold mb-2 text-gray-300">
+                  Select Teams
+                </h3>
+                <div className="flex flex-col space-y-2 mb-6">
+                  {teams.map((team) => {
+                    const color = getTeamColorClasses(team.originalName);
+                    return (
+                      <div
+                        key={team.id}
+                        className={`flex items-center justify-between p-3 rounded-xl cursor-pointer shadow-sm transition-all duration-200 ${
+                          team.active
+                            ? `${color.bg} ${color.hover}`
+                            : inactiveClasses
+                        }`}
+                        onClick={() => toggleTeam(team.id)}
+                      >
+                        <div
+                          className="flex items-center space-x-2 w-full"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {editingTeamId === team.id ? (
                             <div className="flex items-center w-full space-x-2">
-                                <input
-                                    type="text"
-                                    value={team.name}
-                                    onChange={(e) => handleTeamNameChange(e, team.id)}
-                                    onKeyDown={(e) => {
-                                        if (e.key === 'Enter') {
-                                            handleSaveName();
-                                        }
-                                    }}
-                                    onFocus={(e) => {
-                                        if (team.name === team.originalName) {
-                                            e.target.select();
-                                        }
-                                    }}
-                                    placeholder="Enter team name"
-                                    autoFocus
-                                    className="w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 bg-white text-gray-900 placeholder-gray-400"
-                                />
-                                <button
-                                    className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
-                                    onClick={handleSaveName}
-                                >
-                                    Save
-                                </button>
+                              <input
+                                type="text"
+                                value={team.name}
+                                onChange={(e) =>
+                                  handleTeamNameChange(e, team.id)
+                                }
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') {
+                                    handleSaveName();
+                                  }
+                                }}
+                                onFocus={(e) => {
+                                  if (team.name === team.originalName) {
+                                    e.target.select();
+                                  }
+                                }}
+                                placeholder="Enter team name"
+                                autoFocus
+                                className="w-full px-3 py-2 rounded-lg text-sm transition-all duration-200 bg-white text-gray-900 placeholder-gray-400"
+                              />
+                              <button
+                                className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                                onClick={handleSaveName}
+                              >
+                                Save
+                              </button>
                             </div>
-                        ) : (
-                            <span className={`font-medium flex items-center ${team.active ? color.text : inactiveTextClasses}`}>
-                                <span>{team.name}</span>
-                                {team.name !== team.originalName && (
-                                    <span className={`text-sm ml-2 ${team.active ? 'text-opacity-80' : 'text-gray-400'}`}>({team.originalName})</span>
-                                )}
-                                <button
-                                    className={`transition duration-200 ml-2 ${team.active ? `${color.text} hover:text-opacity-60` : `${inactiveTextClasses} hover:text-gray-500`}`}
-                                    onClick={() => setEditingTeamId(team.id)}
+                          ) : (
+                            <span
+                              className={`font-medium flex items-center ${
+                                team.active ? color.text : inactiveTextClasses
+                              }`}
+                            >
+                              <span>{team.name}</span>
+                              {team.name !== team.originalName && (
+                                <span
+                                  className={`text-sm ml-2 ${
+                                    team.active
+                                      ? 'text-opacity-80'
+                                      : 'text-gray-400'
+                                  }`}
                                 >
-                                    ✏️
-                                </button>
+                                  ({team.originalName})
+                                </span>
+                              )}
+                              <button
+                                className={`transition duration-200 ml-2 ${
+                                  team.active
+                                    ? `${color.text} hover:text-opacity-60`
+                                    : `${inactiveTextClasses} hover:text-gray-500`
+                                }`}
+                                onClick={() => setEditingTeamId(team.id)}
+                              >
+                                ✏️
+                              </button>
                             </span>
-                        )}
+                          )}
+                        </div>
+                        <div
+                          className={`p-1 rounded-full border-2 transition-all duration-200 ${
+                            team.active
+                              ? 'bg-white border-white'
+                              : 'border-gray-600'
+                          }`}
+                        >
+                          {team.active && '✔'}
+                        </div>
                       </div>
-                      <div className={`p-1 rounded-full border-2 transition-all duration-200 ${team.active ? 'bg-white border-white' : 'border-gray-600'}`}>
-                        {team.active && <span className={checkmarkColor}>✔</span>}
-                      </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-300">
+                  Number of Stages
+                </h3>
+                <div className="flex items-center justify-center space-x-4 mb-6">
+                  <button
+                    className="p-2 rounded-full bg-gray-700 text-gray-300 hover:bg-gray-600 transition"
+                    onClick={() =>
+                      setTotalStages((prev) => Math.max(2, prev - 1))
+                    }
+                  >
+                    ▼
+                  </button>
+                  <span className="text-4xl font-bold text-gray-100">
+                    {totalStages}
+                  </span>
+                  <button
+                    className="p-2 rounded-full bg-gray-700 text-gray-300 hover:bg-gray-600 transition"
+                    onClick={() =>
+                      setTotalStages((prev) => Math.min(21, prev + 1))
+                    }
+                  >
+                    ▲
+                  </button>
+                </div>
+                <h3 className="text-xl font-semibold mb-2 text-gray-300">
+                  Finish Type
+                </h3>
+                <div className="flex justify-between space-x-4 mb-6">
+                  <button
+                    onClick={() => setFinishType('flatland')}
+                    className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
+                      finishType === 'flatland'
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    Flatland
+                  </button>
+                  <button
+                    onClick={() => setFinishType('ascent')}
+                    className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
+                      finishType === 'ascent'
+                        ? 'bg-indigo-600 text-white'
+                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    }`}
+                  >
+                    Ascent
+                  </button>
+                </div>
+                {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
+                <button
+                  className="w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
+                  onClick={handleStartTour}
+                  disabled={loading}
+                >
+                  <span className="font-bold">START THE TOUR</span>
+                </button>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-300">Number of Stages</h3>
-              <div className="flex items-center justify-center space-x-4 mb-6">
-                <button
-                  className="p-2 rounded-full bg-gray-700 text-gray-300 hover:bg-gray-600 transition"
-                  onClick={() => setTotalStages(prev => Math.max(2, prev - 1))}
-                >
-                  ▼
-                </button>
-                <span className="text-4xl font-bold text-gray-100">{totalStages}</span>
-                <button
-                  className="p-2 rounded-full bg-gray-700 text-gray-300 hover:bg-gray-600 transition"
-                  onClick={() => setTotalStages(prev => Math.min(21, prev + 1))}
-                >
-                  ▲
-                </button>
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-gray-300">Finish Type</h3>
-              <div className="flex justify-between space-x-4 mb-6">
-                <button
-                  onClick={() => setFinishType('flatland')}
-                  className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${finishType === 'flatland' ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-                >
-                  Flatland
-                </button>
-                <button
-                  onClick={() => setFinishType('ascent')}
-                  className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${finishType === 'ascent' ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-                >
-                  Ascent
-                </button>
-              </div>
-              {error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-              <button
-                className="w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
-                onClick={handleStartTour}
-                disabled={loading}
-              >
-                <span className="font-bold">START THE TOUR</span>
-              </button>
             </div>
-          </div>
-        );
+          );
+        };
+
+        const renderRiderAvatar = (teamName, riderType) => {
+          const team = teams.find((t) => t.name === teamName);
+          if (!team) return null;
+          const { bg, text } = getTeamColorClasses(team.originalName);
+
+          return (
+            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-700 border-2 border-gray-600 flex items-center justify-center">
+              <span className="text-2xl">🚴</span>
+              <div
+                className={`absolute top-0 left-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${bg} ${text} border border-gray-900`}
+              >
+                {riderType.charAt(0)}
+              </div>
+            </div>
+          );
         };
 
         const renderStage = () => {
-        const remainingRiders = teams.flatMap(team => (
-          [
-            { type: 'Rouleur', teamName: team.name, originalName: team.originalName },
-            { type: 'Sprinteur', teamName: team.name, originalName: team.originalName }
-          ]
-        )).filter(rider => !finishedRiders.some(fr => fr.teamName === rider.teamName && fr.riderType === rider.type));
+          const remainingRiders = teams
+            .flatMap((team) => [
+              {
+                type: 'Rouleur',
+                teamName: team.name,
+                originalName: team.originalName,
+              },
+              {
+                type: 'Sprinteur',
+                teamName: team.name,
+                originalName: team.originalName,
+              },
+            ])
+            .filter(
+              (rider) =>
+                !finishedRiders.some(
+                  (fr) =>
+                    fr.teamName === rider.teamName &&
+                    fr.riderType === rider.type
+                )
+            );
 
-        const rowsForFinishType = finishType === 'flatland' ? [5, 4, 3, 2, 1] : [4, 3, 2, 1];
+          const rowsForFinishType =
+            finishType === 'flatland' ? [5, 4, 3, 2, 1] : [4, 3, 2, 1];
 
-        return (
-        <div className="flex flex-col items-center p-4 min-h-screen">
-          <div className="w-full max-w-md">
-            <div className="flex items-center justify-between mb-6">
-              <button onClick={() => setView('setup')} className="text-gray-500 hover:text-gray-400 transition">
-                ←
-              </button>
-              <h2 className="text-3xl font-bold text-gray-100">STAGE {currentStage} / {totalStages}</h2>
-              <div className="flex items-center space-x-2">
-                <button onClick={() => setShowRulesModal(true)} className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition">
-                  📖 Rules
-                </button>
-                <button onClick={() => setView('rankings')} className="text-gray-500 hover:text-gray-400 transition">
-                  🏆
-                </button>
-              </div>
-            </div>
-
-            <div className="bg-gray-800 p-4 rounded-xl shadow-sm mb-6">
-              <h3 className="text-lg font-semibold text-gray-300 mb-2 flex items-center justify-between">
-                <span>Riders in Race - Round {roundNumber}</span>
-                {finishedRiders.some(r => r.round === roundNumber && r.time === null) && (
+          return (
+            <div className="flex flex-col items-center p-4 min-h-screen">
+              <div className="w-full max-w-md">
+                <div className="flex items-center justify-between mb-6">
                   <button
-                    onClick={() => setShowConfirmModal(true)}
-                    className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                    onClick={() => setView('setup')}
+                    className="text-gray-500 hover:text-gray-400 transition"
                   >
-                    {isProcessingRound ? '...' : 'Next Round'}
+                    ←
+                  </button>
+                  <h2 className="text-3xl font-bold text-gray-100">
+                    STAGE {currentStage} / {totalStages}
+                  </h2>
+                  <div className="flex items-center space-x-2">
+                    <button
+                      onClick={() => setShowRulesModal(true)}
+                      className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
+                    >
+                      📖 Rules
+                    </button>
+                    <button
+                      onClick={() => setView('rankings')}
+                      className="text-gray-500 hover:text-gray-400 transition"
+                    >
+                      🏆
+                    </button>
+                  </div>
+                </div>
+
+                <div className="bg-gray-800 p-4 rounded-xl shadow-sm mb-6">
+                  <h3 className="text-lg font-semibold text-gray-300 mb-2 flex items-center justify-between">
+                    <span>Riders in Race - Round {roundNumber}</span>
+                    {finishedRiders.some(
+                      (r) => r.round === roundNumber && r.time === null
+                    ) && (
+                      <button
+                        onClick={() => setShowConfirmModal(true)}
+                        className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                      >
+                        {isProcessingRound ? '...' : 'Next Round'}
+                      </button>
+                    )}
+                  </h3>
+                  <ul className="space-y-2">
+                    {remainingRiders.map((rider, index) => (
+                      <li
+                        key={`${rider.teamName}-${rider.type}`}
+                        className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg shadow-sm"
+                      >
+                        <div className="flex items-center space-x-4">
+                          {renderRiderAvatar(rider.teamName, rider.type)}
+                          <span className="font-medium">
+                            {rider.teamName}
+                            {rider.teamName !== rider.originalName && (
+                              <span className="text-gray-400 text-sm">
+                                {' '}
+                                ({rider.originalName})
+                              </span>
+                            )}{' '}
+                            {rider.type}
+                          </span>
+                        </div>
+                        <button
+                          className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                          onClick={() => openModal(rider.teamName, rider.type)}
+                        >
+                          FINISH
+                        </button>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {finishedRiders.length > 0 && (
+                  <div className="bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h3 className="text-lg font-semibold text-gray-300 mb-2">
+                      Finished Riders
+                    </h3>
+                    <ul className="space-y-2">
+                      {finishedRiders
+                        .sort(
+                          (a, b) =>
+                            (a.time === null) - (b.time === null) ||
+                            a.time - b.time
+                        )
+                        .map((rider, index) => (
+                          <li
+                            key={`${rider.teamName}-${rider.riderType}`}
+                            className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg shadow-sm"
+                          >
+                            <div className="flex items-center space-x-4">
+                              <span className="mr-2 text-indigo-400 font-bold">
+                                #{index + 1}
+                              </span>
+                              {renderRiderAvatar(
+                                rider.teamName,
+                                rider.riderType
+                              )}
+                              <span className="font-medium">
+                                {rider.teamName}{' '}
+                                {teams.find((t) => t.name === rider.teamName)
+                                  ?.name !==
+                                  teams.find((t) => t.name === rider.teamName)
+                                    ?.originalName && (
+                                  <span className="text-gray-400 text-sm">
+                                    (
+                                    {
+                                      teams.find(
+                                        (t) => t.name === rider.teamName
+                                      )?.originalName
+                                    }
+                                    )
+                                  </span>
+                                )}{' '}
+                                {rider.riderType}
+                              </span>
+                            </div>
+                            <span className="text-gray-400 text-sm">
+                              Time: {formatTime(rider.time)}
+                              <br />
+                              <span className="text-xs">
+                                Round: {rider.round}, Finish Row:{' '}
+                                {rider.finishRow}
+                              </span>
+                            </span>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+                )}
+
+                {remainingRiders.length === 0 && (
+                  <button
+                    className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
+                    onClick={handleNextStage}
+                    disabled={loading}
+                  >
+                    {loading ? '...' : '→'}
+                    <span className="font-bold">NEXT STAGE</span>
                   </button>
                 )}
-              </h3>
-              <ul className="space-y-2">
-                {remainingRiders.map((rider, index) => (
-                  <li key={`${rider.teamName}-${rider.type}`} className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg shadow-sm">
-                    <div className="flex items-center space-x-4">
-                      {renderRiderAvatar(rider.teamName, rider.type)}
-                      <span className="font-medium">
-                        {rider.teamName}{rider.teamName !== rider.originalName && <span className="text-gray-400 text-sm"> ({rider.originalName})</span>} {rider.type}
-                      </span>
-                    </div>
-                    <button
-                      className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
-                      onClick={() => openModal(rider.teamName, rider.type)}
-                    >
-                      FINISH
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {finishedRiders.length > 0 && (
-              <div className="bg-gray-800 p-4 rounded-xl shadow-sm">
-                <h3 className="text-lg font-semibold text-gray-300 mb-2">Finished Riders</h3>
-                <ul className="space-y-2">
-                  {finishedRiders.sort((a, b) => (a.time === null) - (b.time === null) || a.time - b.time).map((rider, index) => (
-                    <li key={`${rider.teamName}-${rider.riderType}`} className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg shadow-sm">
-                      <div className="flex items-center space-x-4">
-                        <span className="mr-2 text-indigo-400 font-bold">#{index + 1}</span>
-                        {renderRiderAvatar(rider.teamName, rider.riderType)}
-                        <span className="font-medium">
-                          {rider.teamName} {teams.find(t => t.name === rider.teamName)?.name !== teams.find(t => t.name === rider.teamName)?.originalName && <span className="text-gray-400 text-sm">({teams.find(t => t.name === rider.teamName)?.originalName})</span>} {rider.riderType}
-                        </span>
-                      </div>
-                      <span className="text-gray-400 text-sm">
-                          Time: {formatTime(rider.time)}
-                          <br/>
-                          <span className="text-xs">Round: {rider.round}, Finish Row: {rider.finishRow}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
               </div>
-            )}
 
-            {remainingRiders.length === 0 && (
-              <button
-                className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
-                onClick={handleNextStage}
-                disabled={loading}
-              >
-                {loading ? '...' : '→'}
-                <span className="font-bold">NEXT STAGE</span>
-              </button>
-            )}
-          </div>
-        );
+              {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                  <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm">
+                    <div className="flex justify-end">
+                      <button
+                        onClick={closeModal}
+                        className="text-gray-400 hover:text-gray-300"
+                      >
+                        X
+                      </button>
+                    </div>
+                    <h3 className="text-xl font-bold mb-4 text-gray-100">
+                      Score Rider
+                    </h3>
+                    <div className="flex items-center space-x-4 mb-4 justify-center">
+                      {renderRiderAvatar(
+                        modalRider.teamName,
+                        modalRider.riderType
+                      )}
+                      <p className="text-lg font-medium text-gray-300">
+                        {modalRider.teamName} {modalRider.riderType}
+                      </p>
+                    </div>
+
+                    <div className="space-y-4">
+                      <div className="flex flex-col">
+                        <label className="font-semibold text-gray-300 mb-2">
+                          How many rows after the finish line?
+                        </label>
+                        <div className="flex justify-between space-x-2">
+                          {[...Array(finishType === 'flatland' ? 5 : 4)]
+                            .map((_, i) => i + 1)
+                            .reverse()
+                            .map((num) => (
+                              <button
+                                key={num}
+                                onClick={() => setModalFinishRows(num)}
+                                className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
+                                  modalFinishRows === num
+                                    ? 'bg-indigo-600 text-white'
+                                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                }`}
+                              >
+                                {num}
+                              </button>
+                            ))}
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <label className="font-semibold text-gray-300">
+                          Sprint Points
+                        </label>
+                        <input
+                          type="number"
+                          value={modalTokens.sprint}
+                          onChange={(e) =>
+                            setModalTokens({
+                              ...modalTokens,
+                              sprint: Math.max(
+                                0,
+                                parseInt(e.target.value) || 0
+                              ),
+                            })
+                          }
+                          className="w-24 px-3 py-2 border rounded-lg text-center bg-gray-700 text-white border-gray-600"
+                        />
+                      </div>
+
+                      <div className="flex items-center justify-between">
+                        <label className="font-semibold text-gray-300">
+                          Mountain Points
+                        </label>
+                        <input
+                          type="number"
+                          value={modalTokens.mountain}
+                          onChange={(e) =>
+                            setModalTokens({
+                              ...modalTokens,
+                              mountain: Math.max(
+                                0,
+                                parseInt(e.target.value) || 0
+                              ),
+                            })
+                          }
+                          className="w-24 px-3 py-2 border rounded-lg text-center bg-gray-700 text-white border-gray-600"
+                        />
+                      </div>
+                    </div>
+
+                    <button
+                      className="mt-6 w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
+                      onClick={handleSubmitFinish}
+                    >
+                      Confirm
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {showConfirmModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                  <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm text-center">
+                    <h3 className="text-xl font-bold mb-4 text-gray-100">
+                      Confirm End Of Round
+                    </h3>
+                    <p className="text-gray-300 mb-6">
+                      Make sure that ALL riders have been logged for this round.
+                      Starting a new round cannot be undone.
+                    </p>
+                    <div className="flex space-x-4">
+                      <button
+                        className="flex-1 py-3 rounded-lg bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
+                        onClick={() => setShowConfirmModal(false)}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        className="flex-1 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
+                        onClick={handleNextRound}
+                        disabled={isProcessingRound}
+                      >
+                        {isProcessingRound ? '...' : 'Confirm'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {showRulesModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                  <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm">
+                    <div className="flex justify-between items-center mb-4">
+                      <h3 className="text-xl font-bold text-gray-100">
+                        Game Rules & Resources
+                      </h3>
+                      <button
+                        onClick={() => setShowRulesModal(false)}
+                        className="text-gray-400 hover:text-gray-300"
+                      >
+                        X
+                      </button>
+                    </div>
+                    <ul className="space-y-4 text-left">
+                      <li>
+                        <a
+                          href="https://cdn.1j1ju.com/medias/2c/50/2b-flamme-rouge-rulebook.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-400 hover:text-indigo-300 transition"
+                        >
+                          Base Game Rules
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="https://cdn.1j1ju.com/medias/94/37/1a-flamme-rouge-peloton-rulebook.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-400 hover:text-indigo-300 transition"
+                        >
+                          Peloton Rules
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="https://tesera.ru/images/items/1383121/Flamme_Rouge_Meteo_rules_for_internet_1.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-400 hover:text-indigo-300 transition"
+                        >
+                          Meteo Rules
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="https://lautapelit.mycashflow.fi/files/Online%20rules/Flamme%20Grand%20Tour%20rulebook_280x280_ENG_2024-10-08_web.pdf"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-400 hover:text-indigo-300 transition"
+                        >
+                          Grand Tour Rules
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="https://notebooklm.google.com/notebook/e278d56c-d5b8-40e5-aff6-9e7e786eb29d"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-indigo-400 hover:text-indigo-300 transition"
+                        >
+                          AI Rules Assistant
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
         };
 
         const renderRankings = () => {
-        if (!rankings) return null;
-
-        return (
-          <div className="flex flex-col items-center p-4 min-h-screen">
-            <div className="w-full max-w-4xl">
-              <div className="flex items-center justify-between mb-6">
-                <button onClick={() => setView('setup')} className="text-gray-500 hover:text-gray-400 transition">
-                  ←
-                </button>
-                <h2 className="text-3xl font-bold text-gray-100">Final Rankings</h2>
-                <div></div>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div className="bg-gray-800 p-6 rounded-xl shadow-sm">
-                  <h3 className="text-xl font-semibold text-gray-300 mb-4">General Classification</h3>
-                  <ul className="space-y-2">
-                    {rankings.gc.map((team, index) => (
-                      <li key={team.id} className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg">
-                        <span className="font-bold text-indigo-400">#{index + 1}</span>
-                        <span className="font-medium">{team.name}</span>
-                        <span className="text-gray-400">{formatTime(team.time)}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="bg-gray-800 p-6 rounded-xl shadow-sm">
-                  <h3 className="text-xl font-semibold text-gray-300 mb-4">Sprint Classification</h3>
-                  <ul className="space-y-2">
-                    {rankings.sc.map((team, index) => (
-                      <li key={team.id} className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg">
-                        <span className="font-bold text-indigo-400">#{index + 1}</span>
-                        <span className="font-medium">{team.name}</span>
-                        <span className="text-gray-400">{team.sprint} pts</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="bg-gray-800 p-6 rounded-xl shadow-sm">
-                  <h3 className="text-xl font-semibold text-gray-300 mb-4">Mountain Classification</h3>
-                  <ul className="space-y-2">
-                    {rankings.mc.map((team, index) => (
-                      <li key={team.id} className="flex items-center justify-between bg-gray-700 text-gray-100 p-3 rounded-lg">
-                        <span className="font-bold text-indigo-400">#{index + 1}</span>
-                        <span className="font-medium">{team.name}</span>
-                        <span className="text-gray-400">{team.mountain} pts</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        );
-      };
-
-      const renderFinish = () => {
-        return (
-          <div className="flex flex-col items-center p-4 min-h-screen">
-            <div className="w-full max-w-md">
-              <div className="flex items-center justify-between mb-6">
-                <button onClick={() => setView('setup')} className="text-gray-500 hover:text-gray-400 transition">
-                  ←
-                </button>
-                <h2 className="text-3xl font-bold text-gray-100">Tour Complete!</h2>
-                <div></div>
-              </div>
-              <div className="bg-gray-800 p-6 rounded-xl shadow-sm text-center">
-                <p className="text-gray-300 mb-4">Congratulations! You have completed the Grand Tour.</p>
+          if (!rankings) {
+            return (
+              <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-100">
+                <h2 className="text-2xl font-bold mb-4 text-gray-100">
+                  Final Rankings
+                </h2>
+                <p className="text-gray-300">Calculating rankings...</p>
                 <button
-                  onClick={() => setView('rankings')}
-                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition"
+                  onClick={() => setView('stage')}
+                  className="mt-4 px-4 py-2 rounded-lg bg-gray-700 text-gray-100 hover:bg-gray-600"
                 >
-                  View Final Rankings
+                  Go Back
                 </button>
               </div>
+            );
+          }
+          const { gc, sc, mc } = rankings;
+          return (
+            <div className="flex flex-col items-center p-4 min-h-screen">
+              <div className="w-full max-w-md">
+                <div className="flex items-center justify-between mb-6">
+                  <button
+                    onClick={() => setView('stage')}
+                    className="text-gray-500 hover:text-gray-400 transition"
+                  >
+                    ←
+                  </button>
+                  <h2 className="text-3xl font-bold text-gray-100">
+                    Final Rankings
+                  </h2>
+                  <button
+                    onClick={handleRestartTour}
+                    className="text-gray-500 hover:text-gray-400 transition"
+                  >
+                    🔄
+                  </button>
+                </div>
+
+                <div className="space-y-6">
+                  {/* General Classification */}
+                  <div className="bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h3 className="text-xl font-bold mb-2 text-gray-300 flex items-center space-x-2">
+                      <span>⏱️</span>
+                      <span>General Classification (Total Time)</span>
+                    </h3>
+                    <ul className="space-y-2">
+                      {gc.map((team, index) => (
+                        <li
+                          key={team.id}
+                          className="flex items-center justify-between bg-gray-700 p-3 rounded-lg shadow-sm"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <span className="mr-2 text-indigo-400 font-bold">
+                              #{index + 1}
+                            </span>
+                            <div className="flex items-center">
+                              {renderRiderAvatar(team.name, 'Rouleur')}
+                              <span className="font-medium ml-4 text-gray-100">
+                                {team.name}{' '}
+                                {team.name !== team.originalName && (
+                                  <span className="text-gray-400 text-sm">
+                                    ({team.originalName})
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="text-gray-400 text-sm">
+                            {formatTime(team.time)}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Sprint Classification */}
+                  <div className="bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h3 className="text-xl font-bold mb-2 text-gray-300 flex items-center space-x-2">
+                      <span>🏁</span>
+                      <span>Sprint Classification</span>
+                    </h3>
+                    <ul className="space-y-2">
+                      {sc.map((team, index) => (
+                        <li
+                          key={team.id}
+                          className="flex items-center justify-between bg-gray-700 p-3 rounded-lg shadow-sm"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <span className="mr-2 text-indigo-400 font-bold">
+                              #{index + 1}
+                            </span>
+                            <div className="flex items-center">
+                              {renderRiderAvatar(team.name, 'Sprinteur')}
+                              <span className="font-medium ml-4 text-gray-100">
+                                {team.name}{' '}
+                                {team.name !== team.originalName && (
+                                  <span className="text-gray-400 text-sm">
+                                    ({team.originalName})
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="text-gray-400 text-sm">
+                            {team.sprint} pts
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Mountain Classification */}
+                  <div className="bg-gray-800 p-4 rounded-xl shadow-sm">
+                    <h3 className="text-xl font-bold mb-2 text-gray-300 flex items-center space-x-2">
+                      <span>🥇</span>
+                      <span>Mountain Classification</span>
+                    </h3>
+                    <ul className="space-y-2">
+                      {mc.map((team, index) => (
+                        <li
+                          key={team.id}
+                          className="flex items-center justify-between bg-gray-700 p-3 rounded-lg shadow-sm"
+                        >
+                          <div className="flex items-center space-x-4">
+                            <span className="mr-2 text-indigo-400 font-bold">
+                              #{index + 1}
+                            </span>
+                            <div className="flex items-center">
+                              {renderRiderAvatar(team.name, 'Rouleur')}
+                              <span className="font-medium ml-4 text-gray-100">
+                                {team.name}{' '}
+                                {team.name !== team.originalName && (
+                                  <span className="text-gray-400 text-sm">
+                                    ({team.originalName})
+                                  </span>
+                                )}
+                              </span>
+                            </div>
+                          </div>
+                          <span className="text-gray-400 text-sm">
+                            {team.mountain} pts
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        );
+          );
         };
 
-        // Loading check
-      if (loading) {
+        // Main render logic
+        if (loading) {
+          return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-gray-100">
+              <p className="text-lg">Loading Tour...</p>
+            </div>
+          );
+        }
+
+        if (error) {
+          return (
+            <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 text-red-400 p-4 text-center">
+              <p className="font-semibold text-lg">{error}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 rounded-lg bg-red-800 text-red-100"
+              >
+                Reload
+              </button>
+            </div>
+          );
+        }
+
+        const currentView = {
+          setup: renderSetup(),
+          stage: renderStage(),
+          rankings: renderRankings(),
+        }[view];
+
         return (
-          <div className="flex items-center justify-center min-h-screen bg-gray-900">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-              <p className="text-gray-300 text-lg">Loading...</p>
-            </div>
-          </div>
-        );
-      }
-
-      // Main return statement for the App component
-      return (
-        <div className="min-h-screen bg-gray-900 text-white">
-          {view === 'setup' && renderSetup()}
-          {view === 'stage' && renderStage()}
-          {view === 'rankings' && renderRankings()}
-          {view === 'finish' && renderFinish()}
-
-          {/* Modals */}
-          {showModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-              <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm">
-                <div className="flex justify-end">
-                  <button onClick={closeModal} className="text-gray-400 hover:text-gray-300">
-                    X
-                  </button>
-                </div>
-                <h3 className="text-xl font-bold mb-4 text-gray-100">Score Rider</h3>
-                <div className="flex items-center space-x-4 mb-4 justify-center">
-                  {renderRiderAvatar(modalRider.teamName, modalRider.riderType)}
-                  <p className="text-lg font-medium text-gray-300">
-                      {modalRider.teamName} {modalRider.riderType}
-                  </p>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex flex-col">
-                      <label className="font-semibold text-gray-300 mb-2">How many rows after the finish line?</label>
-                      <div className="flex justify-between space-x-2">
-                          {[...Array(finishType === 'flatland' ? 5 : 4)].map((_, i) => i + 1).reverse().map(num => (
-                              <button
-                                  key={num}
-                                  onClick={() => setModalFinishRows(num)}
-                                  className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${modalFinishRows === num ? 'bg-indigo-600 text-white' : 'bg-gray-700 text-gray-300 hover:bg-gray-600'}`}
-                              >
-                                  {num}
-                              </button>
-                          ))}
-                      </div>
+          <div className="min-h-screen bg-gray-900 font-sans antialiased text-gray-100">
+            {currentView}
+            {showRulesModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm">
+                  <div className="flex justify-between items-center mb-4">
+                    <h3 className="text-xl font-bold text-gray-100">
+                      Game Rules & Resources
+                    </h3>
+                    <button
+                      onClick={() => setShowRulesModal(false)}
+                      className="text-gray-400 hover:text-gray-300"
+                    >
+                      X
+                    </button>
                   </div>
-
-                  <div className="flex items-center justify-between">
-                    <label className="font-semibold text-gray-300">Sprint Points</label>
-                    <input
-                      type="number"
-                      value={modalTokens.sprint}
-                      onChange={(e) => setModalTokens({ ...modalTokens, sprint: Math.max(0, parseInt(e.target.value) || 0) })}
-                      className="w-24 px-3 py-2 border rounded-lg text-center bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <label className="font-semibold text-gray-300">Mountain Points</label>
-                    <input
-                      type="number"
-                      value={modalTokens.mountain}
-                      onChange={(e) => setModalTokens({ ...modalTokens, mountain: Math.max(0, parseInt(e.target.value) || 0) })}
-                      className="w-24 px-3 py-2 border rounded-lg text-center bg-gray-700 text-white border-gray-600"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  className="mt-6 w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
-                  onClick={handleSubmitFinish}
-                >
-                  Confirm
-                </button>
-              </div>
-            </div>
-          )}
-
-          {showConfirmModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-              <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm text-center">
-                <h3 className="text-xl font-bold mb-4 text-gray-100">Confirm End Of Round</h3>
-                <p className="text-gray-300 mb-6">Make sure that ALL riders have been logged for this round. Starting a new round cannot be undone.</p>
-                <div className="flex space-x-4">
-                  <button
-                    className="flex-1 py-3 rounded-lg bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
-                    onClick={() => setShowConfirmModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="flex-1 py-3 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700 transition"
-                    onClick={handleNextRound}
-                    disabled={isProcessingRound}
-                  >
-                    {isProcessingRound ? '...' : 'Confirm'}
-                  </button>
+                  <ul className="space-y-4 text-left">
+                    <li>
+                      <a
+                        href="https://cdn.1j1ju.com/medias/2c/50/2b-flamme-rouge-rulebook.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Base Game Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://cdn.1j1ju.com/medias/94/37/1a-flamme-rouge-peloton-rulebook.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Peloton Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://tesera.ru/images/items/1383121/Flamme_Rouge_Meteo_rules_for_internet_1.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Meteo Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://lautapelit.mycashflow.fi/files/Online%20rules/Flamme%20Grand%20Tour%20rulebook_280x280_ENG_2024-10-08_web.pdf"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        Grand Tour Rules
+                      </a>
+                    </li>
+                    <li>
+                      <a
+                        href="https://notebooklm.google.com/notebook/e278d56c-d5b8-40e5-aff6-9e7e786eb29d"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-indigo-400 hover:text-indigo-300 transition"
+                      >
+                        AI Rules Assistant
+                      </a>
+                    </li>
+                  </ul>
                 </div>
               </div>
-            </div>
-          )}
-
-          {showRulesModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-              <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm">
-                <div className="flex justify-between items-center mb-4">
-                  <h3 className="text-xl font-bold text-gray-100">Game Rules & Resources</h3>
-                  <button onClick={() => setShowRulesModal(false)} className="text-gray-400 hover:text-gray-300">
-                    X
-                  </button>
-                </div>
-                <ul className="space-y-4 text-left">
-                  <li>
-                    <a href="https://cdn.1j1ju.com/medias/2c/50/2b-flamme-rouge-rulebook.pdf" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 transition">
-                      Base Game Rules
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://cdn.1j1ju.com/medias/94/37/1a-flamme-rouge-peloton-rulebook.pdf" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 transition">
-                      Peloton Rules
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://tesera.ru/images/items/1383121/Flamme_Rouge_Meteo_rules_for_internet_1.pdf" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 transition">
-                      Meteo Rules
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://lautapelit.mycashflow.fi/files/Online%20rules/Flamme%20Grand%20Tour%20rulebook_280x280_ENG_2024-10-08_web.pdf" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 transition">
-                      Grand Tour Rules
-                    </a>
-                  </li>
-                  <li>
-                    <a href="https://notebooklm.google.com/notebook/e278d56c-d5b8-40e5-aff6-9e7e786eb29d" target="_blank" rel="noopener noreferrer" className="text-indigo-400 hover:text-indigo-300 transition">
-                      AI Rules Assistant
-                    </a>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          )}
-          {showResetConfirmModal && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-              <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm text-center">
-                <h3 className="text-xl font-bold mb-4 text-gray-100">Confirm Reset</h3>
-                <p className="text-gray-300 mb-6">Are you sure you want to reset the tour? All progress will be lost.</p>
-                <div className="flex space-x-4">
-                  <button
-                    className="flex-1 py-3 rounded-lg bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
-                    onClick={() => setShowResetConfirmModal(false)}
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    className="flex-1 py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
-                    onClick={handleResetTour}
-                  >
+            )}
+            {showResetConfirmModal && (
+              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm text-center">
+                  <h3 className="text-xl font-bold mb-4 text-gray-100">
                     Confirm Reset
-                  </button>
+                  </h3>
+                  <p className="text-gray-300 mb-6">
+                    Are you sure you want to reset the tour? All progress will
+                    be lost.
+                  </p>
+                  <div className="flex space-x-4">
+                    <button
+                      className="flex-1 py-3 rounded-lg bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
+                      onClick={() => setShowResetConfirmModal(false)}
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      className="flex-1 py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
+                      onClick={handleResetTour}
+                    >
+                      Confirm Reset
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
-        </div>
+            )}
           </div>
         );
       }
