@@ -663,11 +663,17 @@
           if (!team) return null;
           const { bg, text } = getTeamColorClasses(team.originalName);
 
+          // Determine badge shape based on rider type
+          const isRouleur = riderType === 'Rouleur';
+          const badgeClasses = isRouleur
+            ? 'rounded-full' // R badge remains circular
+            : 'rounded-md'; // S badge becomes square with rounded corners
+
           return (
-            <div className="relative w-10 h-10 rounded-full overflow-hidden bg-gray-700 border-2 border-gray-600 flex items-center justify-center">
+            <div className="relative w-10 h-10 rounded-full bg-gray-700 border-2 border-gray-600 flex items-center justify-center">
               <span className="text-2xl">🚴</span>
               <div
-                className={`absolute top-0 left-0 w-5 h-5 rounded-full flex items-center justify-center text-xs font-bold ${bg} ${text} border border-gray-900`}
+                className={`absolute -top-1 -right-1 w-5 h-5 ${badgeClasses} flex items-center justify-center text-xs font-bold ${bg} ${text} border border-gray-900`}
               >
                 {riderType.charAt(0)}
               </div>
