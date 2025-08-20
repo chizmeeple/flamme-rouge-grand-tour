@@ -858,12 +858,27 @@
                                     }
                                   >
                                     {rider ? (
-                                      <div className="text-center leading-tight">
-                                        <div className="text-[8px]">
-                                          {rider.teamName.split(' ')[0]}
-                                        </div>
-                                        <div className="text-[8px]">
-                                          {rider.riderType.slice(0, 3)}
+                                      <div className="flex items-center justify-center">
+                                        <div
+                                          className={`w-6 h-6 ${
+                                            rider.riderType === 'Rouleur'
+                                              ? 'rounded-full'
+                                              : 'rounded-md'
+                                          } flex items-center justify-center text-sm font-bold ${
+                                            getTeamColorClasses(
+                                              teams.find(
+                                                (t) => t.name === rider.teamName
+                                              )?.originalName || ''
+                                            ).bg
+                                          } ${
+                                            getTeamColorClasses(
+                                              teams.find(
+                                                (t) => t.name === rider.teamName
+                                              )?.originalName || ''
+                                            ).text
+                                          } border border-gray-900`}
+                                        >
+                                          {rider.riderType.charAt(0)}
                                         </div>
                                       </div>
                                     ) : (
