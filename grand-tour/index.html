@@ -6,7 +6,7 @@
     <title>Flamme Rouge Grand Tour</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/reacåt-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
       @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap');
@@ -46,8 +46,6 @@
         const [showConfirmModal, setShowConfirmModal] = useState(false);
         const [showRulesModal, setShowRulesModal] = useState(false);
         const [finishType, setFinishType] = useState('flatland');
-        const [showResetConfirmModal, setShowResetConfirmModal] =
-          useState(false);
 
         // Load data from localStorage on initial render
         useEffect(() => {
@@ -281,10 +279,7 @@
           if (isProcessingRound) return;
           setIsProcessingRound(true);
 
-          const secondsMap = {
-            flatland: { 5: 0, 4: 10, 3: 20, 2: 30, 1: 40 },
-            ascent: { 4: 0, 3: 10, 2: 20, 1: 30 },
-          };
+          const secondsMap = [0, 10, 20, 30, 40];
           const ridersInCurrentRound = finishedRiders
             .filter((r) => r.round === roundNumber && r.time === null)
             .sort((a, b) => b.finishRow - a.finishRow);
@@ -316,7 +311,9 @@
                 (max, r) => Math.max(max, r.finishRow),
                 0
               );
-              const secondsForPack = secondsMap[finishType][fastestFinishRow];
+              const numberOfPossibleRows = finishType === 'flatland' ? 5 : 4;
+              const secondsForPack =
+                secondsMap[numberOfPossibleRows - fastestFinishRow];
               const timeForPack = addedTime * 60 + secondsForPack;
 
               pack.forEach((riderToUpdate) => {
@@ -448,7 +445,7 @@
           });
         };
 
-        const handleResetTour = () => {
+        const handleRestartTour = () => {
           localStorage.removeItem('flammeRougeTour');
           window.location.reload();
         };
@@ -470,20 +467,12 @@
                 <h2 className="text-2xl font-bold text-gray-100">
                   Set Up Grand Tour
                 </h2>
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setShowRulesModal(true)}
-                    className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
-                  >
-                    📖 Rules
-                  </button>
-                  <button
-                    onClick={() => setShowResetConfirmModal(true)}
-                    className="px-3 py-1 rounded-lg text-sm bg-red-600 text-white hover:bg-red-700 transition"
-                  >
-                    Reset Tour
-                  </button>
-                </div>
+                <button
+                  onClick={() => setShowRulesModal(true)}
+                  className="px-3 py-1 rounded-lg text-sm bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
+                >
+                  📖 Rules
+                </button>
               </div>
               <div className="w-full max-w-md">
                 <h3 className="text-xl font-semibold mb-2 text-gray-300">
@@ -857,22 +846,19 @@
                           How many rows after the finish line?
                         </label>
                         <div className="flex justify-between space-x-2">
-                          {[...Array(finishType === 'flatland' ? 5 : 4)]
-                            .map((_, i) => i + 1)
-                            .reverse()
-                            .map((num) => (
-                              <button
-                                key={num}
-                                onClick={() => setModalFinishRows(num)}
-                                className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
-                                  modalFinishRows === num
-                                    ? 'bg-indigo-600 text-white'
-                                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                                }`}
-                              >
-                                {num}
-                              </button>
-                            ))}
+                          {rowsForFinishType.map((num) => (
+                            <button
+                              key={num}
+                              onClick={() => setModalFinishRows(num)}
+                              className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
+                                modalFinishRows === num
+                                  ? 'bg-indigo-600 text-white'
+                                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                              }`}
+                            >
+                              {num}
+                            </button>
+                          ))}
                         </div>
                       </div>
 
@@ -1280,33 +1266,6 @@
                       </a>
                     </li>
                   </ul>
-                </div>
-              </div>
-            )}
-            {showResetConfirmModal && (
-              <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
-                <div className="bg-gray-800 p-6 rounded-xl shadow-2xl w-full max-w-sm text-center">
-                  <h3 className="text-xl font-bold mb-4 text-gray-100">
-                    Confirm Reset
-                  </h3>
-                  <p className="text-gray-300 mb-6">
-                    Are you sure you want to reset the tour? All progress will
-                    be lost.
-                  </p>
-                  <div className="flex space-x-4">
-                    <button
-                      className="flex-1 py-3 rounded-lg bg-gray-700 text-gray-100 hover:bg-gray-600 transition"
-                      onClick={() => setShowResetConfirmModal(false)}
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      className="flex-1 py-3 rounded-lg bg-red-600 text-white hover:bg-red-700 transition"
-                      onClick={handleResetTour}
-                    >
-                      Confirm Reset
-                    </button>
-                  </div>
                 </div>
               </div>
             )}
