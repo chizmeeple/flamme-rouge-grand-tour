@@ -32,7 +32,10 @@
         const [finishedRiders, setFinishedRiders] = useState([]);
         const [showModal, setShowModal] = useState(false);
         const [modalRider, setModalRider] = useState(null);
-        const [modalFinishRows, setModalFinishRows] = useState(5);
+        const [modalFinishPosition, setModalFinishPosition] = useState({
+          row: 5,
+          col: 1,
+        });
         const [modalTokens, setModalTokens] = useState({
           sprint: 0,
           mountain: 0,
@@ -57,10 +60,24 @@
               localStorage.getItem('flammeRougeTour')
             );
             if (savedData) {
+              // Migrate old finishRow format to new grid format if needed
+              let migratedFinishedRiders = savedData.finishedRiders || [];
+              if (
+                migratedFinishedRiders.length > 0 &&
+                typeof migratedFinishedRiders[0].finishRow === 'number'
+              ) {
+                migratedFinishedRiders = migratedFinishedRiders.map(
+                  (rider) => ({
+                    ...rider,
+                    finishRow: { row: rider.finishRow, col: 1 },
+                  })
+                );
+              }
+
               setTeams(savedData.teams);
               setTotalStages(savedData.totalStages);
               setCurrentStage(savedData.currentStage);
-              setFinishedRiders(savedData.finishedRiders);
+              setFinishedRiders(migratedFinishedRiders);
               setView(savedData.view);
               setRankings(savedData.rankings);
               setAddedTime(savedData.addedTime || 0);
@@ -249,10 +266,20 @@
         // Logic for the Stage view
         const openModal = (teamName, riderType) => {
           setModalRider({ teamName, riderType });
-          setModalFinishRows(finishType === 'flatland' ? 5 : 4);
+          setModalFinishPosition({
+            row: finishType === 'flatland' ? 5 : 4,
+            col: 1,
+          });
           setModalTokens({ sprint: 0, mountain: 0 });
           setModalExhaustionCards(0);
           setShowModal(true);
+        };
+
+        const isFinishPositionOccupied = (row, col) => {
+          return finishedRiders.some(
+            (rider) =>
+              rider.finishRow.row === row && rider.finishRow.col === col
+          );
         };
 
         const closeModal = () => {
@@ -272,7 +299,7 @@
             sprint: modalTokens.sprint,
             mountain: modalTokens.mountain,
             round: roundNumber,
-            finishRow: modalFinishRows,
+            finishRow: modalFinishPosition,
             exhaustionCards: modalExhaustionCards,
           };
 
@@ -290,7 +317,14 @@
           };
           const ridersInCurrentRound = finishedRiders
             .filter((r) => r.round === roundNumber && r.time === null)
-            .sort((a, b) => b.finishRow - a.finishRow);
+            .sort((a, b) => {
+              // Sort by row first (higher row = closer to finish line)
+              if (a.finishRow.row !== b.finishRow.row) {
+                return b.finishRow.row - a.finishRow.row;
+              }
+              // If same row, sort by column (left to right)
+              return a.finishRow.col - b.finishRow.col;
+            });
 
           const updatedFinished = [...finishedRiders];
 
@@ -299,10 +333,10 @@
             let currentPack = [ridersInCurrentRound[0]];
             for (let i = 1; i < ridersInCurrentRound.length; i++) {
               if (
-                ridersInCurrentRound[i].finishRow ===
-                  ridersInCurrentRound[i - 1].finishRow ||
-                ridersInCurrentRound[i].finishRow ===
-                  ridersInCurrentRound[i - 1].finishRow - 1
+                ridersInCurrentRound[i].finishRow.row ===
+                  ridersInCurrentRound[i - 1].finishRow.row ||
+                ridersInCurrentRound[i].finishRow.row ===
+                  ridersInCurrentRound[i - 1].finishRow.row - 1
               ) {
                 currentPack.push(ridersInCurrentRound[i]);
               } else {
@@ -316,7 +350,7 @@
           packs.forEach((pack) => {
             if (pack.length > 0) {
               const fastestFinishRow = pack.reduce(
-                (max, r) => Math.max(max, r.finishRow),
+                (max, r) => Math.max(max, r.finishRow.row),
                 0
               );
               const secondsForPack = secondsMap[finishType][fastestFinishRow];
@@ -785,6 +819,63 @@
                     <h3 className="text-lg font-semibold text-gray-300 mb-2">
                       Finished Riders
                     </h3>
+
+                    {/* Finish Position Grid */}
+                    <div className="mb-4 p-3 bg-gray-900 rounded-lg">
+                      <h4 className="text-sm font-medium text-gray-300 mb-2 text-center">
+                        Finish Positions
+                      </h4>
+                      <div className="flex justify-center">
+                        <div className="bg-gray-800 p-2 rounded-lg relative">
+                          {/* Double-line border on the right to indicate "slightly further forward" */}
+                          <div className="absolute right-0 top-0 bottom-0 w-2 flex flex-col">
+                            <div className="flex-1 border-r-2 border-white"></div>
+                            <div className="w-1"></div>
+                            <div className="flex-1 border-r-2 border-white"></div>
+                          </div>
+                          {rowsForFinishType.map((row) => (
+                            <div key={row} className="flex space-x-1 mb-1">
+                              {[1, 2, 3].map((col) => {
+                                const rider = finishedRiders.find(
+                                  (r) =>
+                                    r.finishRow.row === row &&
+                                    r.finishRow.col === col
+                                );
+                                return (
+                                  <div
+                                    key={`${row}-${col}`}
+                                    className={`flex-1 h-12 rounded border-2 flex items-center justify-center text-xs font-bold relative ${
+                                      rider
+                                        ? 'border-indigo-400 bg-indigo-600 text-white'
+                                        : 'border-gray-600 bg-gray-700 text-gray-400'
+                                    }`}
+                                    title={
+                                      rider
+                                        ? `${rider.teamName} ${rider.riderType}`
+                                        : `Row ${row}, Col ${col}`
+                                    }
+                                  >
+                                    {rider ? (
+                                      <div className="text-center leading-tight">
+                                        <div className="text-[8px]">
+                                          {rider.teamName.split(' ')[0]}
+                                        </div>
+                                        <div className="text-[8px]">
+                                          {rider.riderType.slice(0, 3)}
+                                        </div>
+                                      </div>
+                                    ) : (
+                                      `${row}-${col}`
+                                    )}
+                                  </div>
+                                );
+                              })}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
                     <ul className="space-y-2">
                       {finishedRiders
                         .sort(
@@ -828,8 +919,8 @@
                               Time: {formatTime(rider.time)}
                               <br />
                               <span className="text-xs">
-                                Round: {rider.round}, Finish Row:{' '}
-                                {rider.finishRow}
+                                Round: {rider.round}, Finish: Row{' '}
+                                {rider.finishRow.row}, Col {rider.finishRow.col}
                                 {rider.exhaustionCards !== undefined && (
                                   <>
                                     <br />
@@ -883,22 +974,56 @@
                     <div className="space-y-4">
                       <div className="flex flex-col">
                         <label className="font-semibold text-gray-300 mb-2">
-                          How many rows after the finish line?
+                          Select finish position:
                         </label>
-                        <div className="flex justify-between space-x-2">
-                          {rowsForFinishType.map((num) => (
-                            <button
-                              key={num}
-                              onClick={() => setModalFinishRows(num)}
-                              className={`flex-1 py-3 rounded-lg font-bold text-lg transition ${
-                                modalFinishRows === num
-                                  ? 'bg-indigo-600 text-white'
-                                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
-                              }`}
-                            >
-                              {num}
-                            </button>
+                        <div className="bg-gray-900 p-3 rounded-lg relative">
+                          {/* Double-line border on the right to indicate "slightly further forward" */}
+                          <div className="absolute right-0 top-0 bottom-0 w-2 flex flex-col">
+                            <div className="flex-1 border-r-2 border-white"></div>
+                            <div className="w-1"></div>
+                            <div className="flex-1 border-r-2 border-white"></div>
+                          </div>
+                          {rowsForFinishType.map((row) => (
+                            <div key={row} className="flex space-x-2 mb-2">
+                              {[1, 2, 3].map((col) => {
+                                const isOccupied = isFinishPositionOccupied(
+                                  row,
+                                  col
+                                );
+                                const isSelected =
+                                  modalFinishPosition.row === row &&
+                                  modalFinishPosition.col === col;
+                                return (
+                                  <button
+                                    key={`${row}-${col}`}
+                                    onClick={() =>
+                                      !isOccupied &&
+                                      setModalFinishPosition({ row, col })
+                                    }
+                                    disabled={isOccupied}
+                                    className={`flex-1 h-12 rounded-lg font-bold text-sm transition relative ${
+                                      isSelected
+                                        ? 'bg-indigo-600 text-white'
+                                        : isOccupied
+                                        ? 'bg-red-600 text-white cursor-not-allowed'
+                                        : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                                    }`}
+                                    title={
+                                      isOccupied
+                                        ? 'Position occupied'
+                                        : `Row ${row}, Column ${col}`
+                                    }
+                                  >
+                                    {isOccupied ? '✗' : `${row}-${col}`}
+                                  </button>
+                                );
+                              })}
+                            </div>
                           ))}
+                        </div>
+                        <div className="text-xs text-gray-400 text-center mt-2">
+                          Select a specific finish position. Red squares are
+                          occupied.
                         </div>
                       </div>
 
