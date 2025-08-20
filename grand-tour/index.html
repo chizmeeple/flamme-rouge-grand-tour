@@ -278,7 +278,9 @@
         const isFinishPositionOccupied = (row, col) => {
           return finishedRiders.some(
             (rider) =>
-              rider.finishRow.row === row && rider.finishRow.col === col
+              rider.finishRow.row === row &&
+              rider.finishRow.col === col &&
+              rider.round === roundNumber
           );
         };
 
