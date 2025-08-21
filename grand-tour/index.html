@@ -49,6 +49,7 @@
         const [isProcessingRound, setIsProcessingRound] = useState(false);
         const [showConfirmModal, setShowConfirmModal] = useState(false);
         const [showRulesModal, setShowRulesModal] = useState(false);
+        const [showEndOfStageModal, setShowEndOfStageModal] = useState(false);
         const [finishType, setFinishType] = useState('flatland');
         const [showResetConfirmModal, setShowResetConfirmModal] =
           useState(false);
@@ -414,13 +415,20 @@
             }
           );
 
+          // Store the updated riders for the end of stage screen
+          setFinishedRiders(updatedFinishedRiders);
+          setShowEndOfStageModal(true);
+          setLoading(false);
+        };
+
+        const handleProceedToNextStage = () => {
           const newTeams = teams.map((team) => {
             const updatedTeam = { ...team };
             const stageResults = {
-              rouleur: updatedFinishedRiders.find(
+              rouleur: finishedRiders.find(
                 (r) => r.teamName === team.name && r.riderType === 'Rouleur'
               ),
-              sprinter: updatedFinishedRiders.find(
+              sprinter: finishedRiders.find(
                 (r) => r.teamName === team.name && r.riderType === 'Sprinter'
               ),
             };
@@ -446,7 +454,7 @@
             setAddedTime(0);
             setRoundNumber(1);
           }
-          setLoading(false);
+          setShowEndOfStageModal(false);
         };
 
         const calculateFinalRankings = (tourTeams) => {
@@ -1210,6 +1218,239 @@
                         disabled={isProcessingRound}
                       >
                         {isProcessingRound ? '...' : 'Confirm'}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {showEndOfStageModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+                  <div className="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-3xl font-bold text-gray-100">
+                        🏁 End of Stage {currentStage}
+                      </h2>
+                      <button
+                        onClick={() => setShowEndOfStageModal(false)}
+                        className="text-gray-400 hover:text-gray-300 text-2xl"
+                      >
+                        ×
+                      </button>
+                    </div>
+
+                    {/* Final Results */}
+                    <div className="mb-8">
+                      <h3 className="text-xl font-semibold text-gray-300 mb-4">
+                        Final Results
+                      </h3>
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        {/* Podium */}
+                        <div className="bg-gray-700 p-4 rounded-lg">
+                          <h4 className="text-lg font-semibold text-gray-300 mb-3 text-center">
+                            🏆 Podium
+                          </h4>
+                          <div className="space-y-3">
+                            {finishedRiders.slice(0, 3).map((rider, index) => (
+                              <div
+                                key={`${rider.teamName}-${rider.riderType}`}
+                                className="flex items-center justify-between bg-gray-600 p-3 rounded-lg"
+                              >
+                                <div className="flex items-center space-x-3">
+                                  <span className="text-2xl">
+                                    {index === 0
+                                      ? '🥇'
+                                      : index === 1
+                                      ? '🥈'
+                                      : '🥉'}
+                                  </span>
+                                  <div className="flex items-center space-x-2">
+                                    <div
+                                      className={`w-6 h-6 ${
+                                        rider.riderType === 'Rouleur'
+                                          ? 'rounded-full'
+                                          : 'rounded-md'
+                                      } flex items-center justify-center text-sm font-bold ${
+                                        getTeamColorClasses(
+                                          teams.find(
+                                            (t) => t.name === rider.teamName
+                                          )?.originalName || ''
+                                        ).bg
+                                      } ${
+                                        getTeamColorClasses(
+                                          teams.find(
+                                            (t) => t.name === rider.teamName
+                                          )?.originalName || ''
+                                        ).text
+                                      } border border-gray-900`}
+                                    >
+                                      {rider.riderType.charAt(0)}
+                                    </div>
+                                    <span className="font-medium text-gray-100">
+                                      {rider.teamName} {rider.riderType}
+                                    </span>
+                                  </div>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-lg font-bold text-gray-100">
+                                    {formatTime(rider.time)}
+                                  </div>
+                                  <div className="text-sm text-gray-400">
+                                    +{rider.podium} pts
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Exhaustion Cards */}
+                        <div className="bg-gray-700 p-4 rounded-lg">
+                          <h4 className="text-lg font-semibold text-gray-300 mb-3 text-center">
+                            🃏 Exhaustion Cards
+                          </h4>
+                          <div className="space-y-3">
+                            {finishedRiders.map((rider) => (
+                              <div
+                                key={`${rider.teamName}-${rider.riderType}`}
+                                className="flex items-center justify-between bg-gray-600 p-3 rounded-lg"
+                              >
+                                <div className="flex items-center space-x-2">
+                                  <div
+                                    className={`w-6 h-6 ${
+                                      rider.riderType === 'Rouleur'
+                                        ? 'rounded-full'
+                                        : 'rounded-md'
+                                    } flex items-center justify-center text-sm font-bold ${
+                                      getTeamColorClasses(
+                                        teams.find(
+                                          (t) => t.name === rider.teamName
+                                        )?.originalName || ''
+                                      ).bg
+                                    } ${
+                                      getTeamColorClasses(
+                                        teams.find(
+                                          (t) => t.name === rider.teamName
+                                        )?.originalName || ''
+                                      ).text
+                                    } border border-gray-900`}
+                                  >
+                                    {rider.riderType.charAt(0)}
+                                  </div>
+                                  <span className="font-medium text-gray-100">
+                                    {rider.teamName} {rider.riderType}
+                                  </span>
+                                </div>
+                                <div className="text-right">
+                                  <div className="text-sm text-gray-400">
+                                    Keeps {rider.exhaustionCards} × 🃏
+                                  </div>
+                                  <div className="text-xs text-gray-500">
+                                    for next stage
+                                  </div>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Complete Results Table */}
+                    <div className="mb-8">
+                      <h3 className="text-xl font-semibold text-gray-300 mb-4">
+                        Complete Results
+                      </h3>
+                      <div className="bg-gray-700 rounded-lg overflow-hidden">
+                        <table className="w-full">
+                          <thead className="bg-gray-600">
+                            <tr>
+                              <th className="px-4 py-3 text-left text-gray-300 font-semibold">
+                                Position
+                              </th>
+                              <th className="px-4 py-3 text-left text-gray-300 font-semibold">
+                                Rider
+                              </th>
+                              <th className="px-4 py-3 text-left text-gray-300 font-semibold">
+                                Time
+                              </th>
+                              <th className="px-4 py-3 text-left text-gray-300 font-semibold">
+                                Points
+                              </th>
+                              <th className="px-4 py-3 text-left text-gray-300 font-semibold">
+                                Exhaustion
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="divide-y divide-gray-600">
+                            {finishedRiders.map((rider, index) => (
+                              <tr
+                                key={`${rider.teamName}-${rider.riderType}`}
+                                className="hover:bg-gray-600"
+                              >
+                                <td className="px-4 py-3 text-gray-100">
+                                  <span className="font-bold">
+                                    #{index + 1}
+                                  </span>
+                                </td>
+                                <td className="px-4 py-3">
+                                  <div className="flex items-center space-x-2">
+                                    <div
+                                      className={`w-6 h-6 ${
+                                        rider.riderType === 'Rouleur'
+                                          ? 'rounded-full'
+                                          : 'rounded-md'
+                                      } flex items-center justify-center text-sm font-bold ${
+                                        getTeamColorClasses(
+                                          teams.find(
+                                            (t) => t.name === rider.teamName
+                                          )?.originalName || ''
+                                        ).bg
+                                      } ${
+                                        getTeamColorClasses(
+                                          teams.find(
+                                            (t) => t.name === rider.teamName
+                                          )?.originalName || ''
+                                        ).text
+                                      } border border-gray-900`}
+                                    >
+                                      {rider.riderType.charAt(0)}
+                                    </div>
+                                    <span className="text-gray-100">
+                                      {rider.teamName} {rider.riderType}
+                                    </span>
+                                  </div>
+                                </td>
+                                <td className="px-4 py-3 text-gray-100 font-mono">
+                                  {formatTime(rider.time)}
+                                </td>
+                                <td className="px-4 py-3 text-gray-100">
+                                  {rider.podium > 0
+                                    ? `+${rider.podium} pts`
+                                    : '-'}
+                                </td>
+                                <td className="px-4 py-3 text-gray-100">
+                                  {rider.exhaustionCards} × 🃏
+                                </td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+
+                    {/* Action Button */}
+                    <div className="flex justify-center">
+                      <button
+                        onClick={handleProceedToNextStage}
+                        className="px-8 py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center space-x-3 text-lg font-bold"
+                      >
+                        <span>🚩</span>
+                        <span>
+                          {currentStage === totalStages
+                            ? 'Finish Tour'
+                            : 'Next Stage'}
+                        </span>
                       </button>
                     </div>
                   </div>
