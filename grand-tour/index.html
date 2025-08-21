@@ -805,7 +805,11 @@
                         onClick={() => setShowConfirmModal(true)}
                         className="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300"
                       >
-                        {isProcessingRound ? '...' : 'Next Round'}
+                        {isProcessingRound
+                          ? '...'
+                          : remainingRiders.length === 0
+                          ? 'End Round'
+                          : 'Next Round'}
                       </button>
                     )}
                   </h3>
@@ -1014,16 +1018,19 @@
                   </div>
                 )}
 
-                {remainingRiders.length === 0 && (
-                  <button
-                    className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
-                    onClick={handleNextStage}
-                    disabled={loading}
-                  >
-                    {loading ? '...' : '🚩'}
-                    <span className="font-bold">End of Stage</span>
-                  </button>
-                )}
+                {remainingRiders.length === 0 &&
+                  !finishedRiders.some(
+                    (r) => r.round === roundNumber && r.time === null
+                  ) && (
+                    <button
+                      className="mt-6 w-full py-4 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center justify-center space-x-2"
+                      onClick={handleNextStage}
+                      disabled={loading}
+                    >
+                      {loading ? '...' : '🚩'}
+                      <span className="font-bold">End of Stage</span>
+                    </button>
+                  )}
               </div>
 
               {showModal && (
