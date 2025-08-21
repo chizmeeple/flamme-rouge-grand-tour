@@ -1577,77 +1577,83 @@
                   <h3 className="text-lg font-semibold text-gray-300 mb-4 text-center">
                     Complete Results
                   </h3>
-                  <div className="bg-gray-800 rounded-xl shadow-sm overflow-hidden">
-                    <table className="w-full">
-                      <thead className="bg-gray-700">
-                        <tr>
-                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
-                            Position
-                          </th>
-                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
-                            Rider
-                          </th>
-                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
-                            Time
-                          </th>
-                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
-                            Points
-                          </th>
-                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
-                            Exhaustion
-                          </th>
-                        </tr>
-                      </thead>
-                      <tbody className="divide-y divide-gray-700">
-                        {finishedRiders.map((rider, index) => (
-                          <tr
-                            key={`${rider.teamName}-${rider.riderType}`}
-                            className="hover:bg-gray-700 transition-colors"
-                          >
-                            <td className="px-4 py-3 text-gray-100">
-                              <span className="font-bold">#{index + 1}</span>
-                            </td>
-                            <td className="px-4 py-3">
-                              <div className="flex items-center space-x-3">
-                                <div
-                                  className={`w-6 h-6 ${
-                                    rider.riderType === 'Rouleur'
-                                      ? 'rounded-full'
-                                      : 'rounded-md'
-                                  } flex items-center justify-center text-sm font-bold ${
-                                    getTeamColorClasses(
-                                      teams.find(
-                                        (t) => t.name === rider.teamName
-                                      )?.originalName || ''
-                                    ).bg
-                                  } ${
-                                    getTeamColorClasses(
-                                      teams.find(
-                                        (t) => t.name === rider.teamName
-                                      )?.originalName || ''
-                                    ).text
-                                  } border border-gray-900`}
-                                >
-                                  {rider.riderType.charAt(0)}
-                                </div>
-                                <span className="text-gray-100">
-                                  {rider.teamName} {rider.riderType}
-                                </span>
+                  <div className="space-y-3">
+                    {finishedRiders
+                      .sort((a, b) => a.time - b.time)
+                      .map((rider, index) => (
+                        <div
+                          key={`${rider.teamName}-${rider.riderType}`}
+                          className="bg-gray-700 text-gray-100 p-4 rounded-lg shadow-sm"
+                        >
+                          <div className="flex items-center justify-between mb-3">
+                            <div className="flex items-center space-x-3">
+                              <span className="text-indigo-400 font-bold text-lg">
+                                #{index + 1}
+                              </span>
+                              <div
+                                className={`w-8 h-8 ${
+                                  rider.riderType === 'Rouleur'
+                                    ? 'rounded-full'
+                                    : 'rounded-md'
+                                } flex items-center justify-center text-sm font-bold ${
+                                  getTeamColorClasses(
+                                    teams.find((t) => t.name === rider.teamName)
+                                      ?.originalName || ''
+                                  ).bg
+                                } ${
+                                  getTeamColorClasses(
+                                    teams.find((t) => t.name === rider.teamName)
+                                      ?.originalName || ''
+                                  ).text
+                                } border border-gray-900`}
+                              >
+                                {rider.riderType.charAt(0)}
                               </div>
-                            </td>
-                            <td className="px-4 py-3 text-gray-100 font-mono">
-                              {formatTimeDisplay(rider, index, finishedRiders)}
-                            </td>
-                            <td className="px-4 py-3 text-gray-100">
-                              {rider.podium > 0 ? `+${rider.podium} pts` : '-'}
-                            </td>
-                            <td className="px-4 py-3 text-gray-100">
-                              Keep {rider.exhaustionCards} × 🃏
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                              <span className="font-medium text-lg">
+                                {rider.teamName} {rider.riderType}
+                              </span>
+                            </div>
+                            {index < 3 && (
+                              <span className="text-3xl">
+                                {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'}
+                              </span>
+                            )}
+                          </div>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-sm">
+                            <div className="flex flex-col">
+                              <span className="text-gray-400 text-xs uppercase tracking-wide">
+                                Time
+                              </span>
+                              <span className="font-mono font-bold">
+                                {formatTimeDisplay(
+                                  rider,
+                                  index,
+                                  finishedRiders
+                                )}
+                              </span>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-gray-400 text-xs uppercase tracking-wide">
+                                Points
+                              </span>
+                              <span className="font-bold">
+                                {rider.podium > 0
+                                  ? `+${rider.podium} pts`
+                                  : '-'}
+                              </span>
+                            </div>
+                            <div className="flex flex-col">
+                              <span className="text-gray-400 text-xs uppercase tracking-wide">
+                                Exhaustion
+                              </span>
+                              <span className="font-bold">
+                                Keep {rider.exhaustionCards} × 🃏
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                   </div>
                 </div>
 
