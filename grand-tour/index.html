@@ -420,8 +420,8 @@
               rouleur: updatedFinishedRiders.find(
                 (r) => r.teamName === team.name && r.riderType === 'Rouleur'
               ),
-              sprinteur: updatedFinishedRiders.find(
-                (r) => r.teamName === team.name && r.riderType === 'Sprinteur'
+              sprinter: updatedFinishedRiders.find(
+                (r) => r.teamName === team.name && r.riderType === 'Sprinter'
               ),
             };
 
@@ -456,31 +456,31 @@
               const rouleurTime = stage.results.rouleur
                 ? stage.results.rouleur.time
                 : 0;
-              const sprinteurTime = stage.results.sprinteur
-                ? stage.results.sprinteur.time
+              const sprinterTime = stage.results.sprinter
+                ? stage.results.sprinter.time
                 : 0;
-              totals.time += rouleurTime + sprinteurTime;
+              totals.time += rouleurTime + sprinterTime;
               const rouleurPodium = stage.results.rouleur
                 ? stage.results.rouleur.podium
                 : 0;
-              const sprinteurPodium = stage.results.sprinteur
-                ? stage.results.sprinteur.podium
+              const sprinterPodium = stage.results.sprinter
+                ? stage.results.sprinter.podium
                 : 0;
-              totals.podium += rouleurPodium + sprinteurPodium;
+              totals.podium += rouleurPodium + sprinterPodium;
               const rouleurSprint = stage.results.rouleur
                 ? stage.results.rouleur.sprint
                 : 0;
-              const sprinteurSprint = stage.results.sprinteur
-                ? stage.results.sprinteur.sprint
+              const sprinterSprint = stage.results.sprinter
+                ? stage.results.sprinter.sprint
                 : 0;
-              totals.sprint += rouleurSprint + sprinteurSprint;
+              totals.sprint += rouleurSprint + sprinterSprint;
               const rouleurMountain = stage.results.rouleur
                 ? stage.results.rouleur.mountain
                 : 0;
-              const sprinteurMountain = stage.results.sprinteur
-                ? stage.results.sprinteur.mountain
+              const sprinterMountain = stage.results.sprinter
+                ? stage.results.sprinter.mountain
                 : 0;
-              totals.mountain += rouleurMountain + sprinteurMountain;
+              totals.mountain += rouleurMountain + sprinterMountain;
             });
             return totals;
           };
@@ -747,7 +747,7 @@
                 originalName: team.originalName,
               },
               {
-                type: 'Sprinteur',
+                type: 'Sprinter',
                 teamName: team.name,
                 originalName: team.originalName,
               },
@@ -1378,7 +1378,7 @@
                               #{index + 1}
                             </span>
                             <div className="flex items-center">
-                              {renderRiderAvatar(team.name, 'Sprinteur')}
+                              {renderRiderAvatar(team.name, 'Sprinter')}
                               <span className="font-medium ml-4 text-gray-100">
                                 {team.name}{' '}
                                 {team.name !== team.originalName && (
