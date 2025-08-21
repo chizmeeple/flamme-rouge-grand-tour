@@ -1244,9 +1244,9 @@
                       <h3 className="text-xl font-semibold text-gray-300 mb-4">
                         Final Results
                       </h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="mb-6">
                         {/* Podium */}
-                        <div className="bg-gray-700 p-4 rounded-lg">
+                        <div className="bg-gray-700 p-4 rounded-lg max-w-md mx-auto">
                           <h4 className="text-lg font-semibold text-gray-300 mb-3 text-center">
                             🏆 Podium
                           </h4>
@@ -1293,60 +1293,14 @@
                                 </div>
                                 <div className="text-right">
                                   <div className="text-lg font-bold text-gray-100">
-                                    {formatTime(rider.time)}
+                                    {formatTimeDisplay(
+                                      rider,
+                                      index,
+                                      finishedRiders
+                                    )}
                                   </div>
                                   <div className="text-sm text-gray-400">
                                     +{rider.podium} pts
-                                  </div>
-                                </div>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Exhaustion Cards */}
-                        <div className="bg-gray-700 p-4 rounded-lg">
-                          <h4 className="text-lg font-semibold text-gray-300 mb-3 text-center">
-                            🃏 Exhaustion Cards
-                          </h4>
-                          <div className="space-y-3">
-                            {finishedRiders.map((rider) => (
-                              <div
-                                key={`${rider.teamName}-${rider.riderType}`}
-                                className="flex items-center justify-between bg-gray-600 p-3 rounded-lg"
-                              >
-                                <div className="flex items-center space-x-2">
-                                  <div
-                                    className={`w-6 h-6 ${
-                                      rider.riderType === 'Rouleur'
-                                        ? 'rounded-full'
-                                        : 'rounded-md'
-                                    } flex items-center justify-center text-sm font-bold ${
-                                      getTeamColorClasses(
-                                        teams.find(
-                                          (t) => t.name === rider.teamName
-                                        )?.originalName || ''
-                                      ).bg
-                                    } ${
-                                      getTeamColorClasses(
-                                        teams.find(
-                                          (t) => t.name === rider.teamName
-                                        )?.originalName || ''
-                                      ).text
-                                    } border border-gray-900`}
-                                  >
-                                    {rider.riderType.charAt(0)}
-                                  </div>
-                                  <span className="font-medium text-gray-100">
-                                    {rider.teamName} {rider.riderType}
-                                  </span>
-                                </div>
-                                <div className="text-right">
-                                  <div className="text-sm text-gray-400">
-                                    Keeps {rider.exhaustionCards} × 🃏
-                                  </div>
-                                  <div className="text-xs text-gray-500">
-                                    for next stage
                                   </div>
                                 </div>
                               </div>
@@ -1422,7 +1376,11 @@
                                   </div>
                                 </td>
                                 <td className="px-4 py-3 text-gray-100 font-mono">
-                                  {formatTime(rider.time)}
+                                  {formatTimeDisplay(
+                                    rider,
+                                    index,
+                                    finishedRiders
+                                  )}
                                 </td>
                                 <td className="px-4 py-3 text-gray-100">
                                   {rider.podium > 0
@@ -1430,7 +1388,7 @@
                                     : '-'}
                                 </td>
                                 <td className="px-4 py-3 text-gray-100">
-                                  {rider.exhaustionCards} × 🃏
+                                  Keep {rider.exhaustionCards} × 🃏
                                 </td>
                               </tr>
                             ))}
