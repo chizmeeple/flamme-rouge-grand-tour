@@ -792,12 +792,6 @@
                     >
                       📖 Rules
                     </button>
-                    <button
-                      onClick={() => setView('rankings')}
-                      className="text-gray-500 hover:text-gray-400 transition"
-                    >
-                      🏆
-                    </button>
                   </div>
                 </div>
 
@@ -1499,35 +1493,27 @@
                   >
                     ←
                   </button>
-                  <h2 className="text-3xl font-bold text-gray-100">
+                  <h2 className="text-xl font-bold text-gray-100">
                     🏁 End of Stage {currentStage}
                   </h2>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => setView('rankings')}
-                      className="text-gray-500 hover:text-gray-400 transition"
-                    >
-                      🏆
-                    </button>
-                  </div>
                 </div>
 
                 {/* Final Results */}
                 <div className="mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-300 mb-6 text-center">
+                  <h3 className="text-lg font-semibold text-gray-300 mb-4 text-center">
                     Final Results
                   </h3>
-                  <div className="mb-8">
+                  <div className="mb-6">
                     {/* Podium */}
-                    <div className="bg-gray-800 p-6 rounded-xl shadow-sm max-w-2xl mx-auto">
-                      <h4 className="text-xl font-semibold text-gray-300 mb-4 text-center">
+                    <div className="bg-gray-800 p-4 rounded-lg shadow-sm max-w-2xl mx-auto">
+                      <h4 className="text-lg font-semibold text-gray-300 mb-3 text-center">
                         🏆 Podium
                       </h4>
-                      <div className="space-y-4">
+                      <div className="space-y-3">
                         {finishedRiders.slice(0, 3).map((rider, index) => (
                           <div
                             key={`${rider.teamName}-${rider.riderType}`}
-                            className="flex items-center justify-between bg-gray-700 p-4 rounded-lg"
+                            className="flex items-center justify-between bg-gray-700 p-3 rounded-lg"
                           >
                             <div className="flex items-center space-x-4">
                               <span className="text-3xl">
@@ -1555,13 +1541,13 @@
                                 >
                                   {rider.riderType.charAt(0)}
                                 </div>
-                                <span className="font-medium text-gray-100 text-lg">
+                                <span className="font-medium text-gray-100">
                                   {rider.teamName} {rider.riderType}
                                 </span>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="text-xl font-bold text-gray-100">
+                              <div className="text-lg font-bold text-gray-100">
                                 {formatTimeDisplay(
                                   rider,
                                   index,
@@ -1581,26 +1567,26 @@
 
                 {/* Complete Results Table */}
                 <div className="mb-8">
-                  <h3 className="text-2xl font-semibold text-gray-300 mb-6 text-center">
+                  <h3 className="text-lg font-semibold text-gray-300 mb-4 text-center">
                     Complete Results
                   </h3>
                   <div className="bg-gray-800 rounded-xl shadow-sm overflow-hidden">
                     <table className="w-full">
                       <thead className="bg-gray-700">
                         <tr>
-                          <th className="px-6 py-4 text-left text-gray-300 font-semibold text-lg">
+                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
                             Position
                           </th>
-                          <th className="px-6 py-4 text-left text-gray-300 font-semibold text-lg">
+                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
                             Rider
                           </th>
-                          <th className="px-6 py-4 text-left text-gray-300 font-semibold text-lg">
+                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
                             Time
                           </th>
-                          <th className="px-6 py-4 text-left text-gray-300 font-semibold text-lg">
+                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
                             Points
                           </th>
-                          <th className="px-6 py-4 text-left text-gray-300 font-semibold text-lg">
+                          <th className="px-4 py-3 text-left text-gray-300 font-semibold">
                             Exhaustion
                           </th>
                         </tr>
@@ -1611,15 +1597,13 @@
                             key={`${rider.teamName}-${rider.riderType}`}
                             className="hover:bg-gray-700 transition-colors"
                           >
-                            <td className="px-6 py-4 text-gray-100">
-                              <span className="font-bold text-lg">
-                                #{index + 1}
-                              </span>
+                            <td className="px-4 py-3 text-gray-100">
+                              <span className="font-bold">#{index + 1}</span>
                             </td>
-                            <td className="px-6 py-4">
+                            <td className="px-4 py-3">
                               <div className="flex items-center space-x-3">
                                 <div
-                                  className={`w-8 h-8 ${
+                                  className={`w-6 h-6 ${
                                     rider.riderType === 'Rouleur'
                                       ? 'rounded-full'
                                       : 'rounded-md'
@@ -1639,18 +1623,18 @@
                                 >
                                   {rider.riderType.charAt(0)}
                                 </div>
-                                <span className="text-gray-100 text-lg">
+                                <span className="text-gray-100">
                                   {rider.teamName} {rider.riderType}
                                 </span>
                               </div>
                             </td>
-                            <td className="px-6 py-4 text-gray-100 font-mono text-lg">
+                            <td className="px-4 py-3 text-gray-100 font-mono">
                               {formatTimeDisplay(rider, index, finishedRiders)}
                             </td>
-                            <td className="px-6 py-4 text-gray-100 text-lg">
+                            <td className="px-4 py-3 text-gray-100">
                               {rider.podium > 0 ? `+${rider.podium} pts` : '-'}
                             </td>
-                            <td className="px-6 py-4 text-gray-100 text-lg">
+                            <td className="px-4 py-3 text-gray-100">
                               Keep {rider.exhaustionCards} × 🃏
                             </td>
                           </tr>
@@ -1661,10 +1645,10 @@
                 </div>
 
                 {/* Action Button */}
-                <div className="flex justify-center mb-8">
+                <div className="flex justify-center mb-6">
                   <button
                     onClick={handleProceedToNextStage}
-                    className="px-12 py-6 bg-indigo-600 text-white rounded-xl shadow-lg hover:bg-indigo-700 transition duration-300 flex items-center space-x-4 text-2xl font-bold"
+                    className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition duration-300 flex items-center space-x-2 text-sm font-bold"
                   >
                     <span>🚩</span>
                     <span>
