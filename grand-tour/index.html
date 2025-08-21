@@ -843,77 +843,81 @@
                       Finished Riders
                     </h3>
 
-                    {/* Finish Position Grid */}
-                    <div className="mb-4 p-3 bg-gray-900 rounded-lg">
-                      <h4 className="text-sm font-medium text-gray-300 mb-2 text-center">
-                        Finish Positions
-                      </h4>
-                      <div className="flex justify-center">
-                        <div className="bg-gray-800 p-2 rounded-lg relative w-full max-w-2xl">
-                          {/* Double-line border on the right to indicate "slightly further forward" */}
-                          <div className="absolute right-0 top-0 bottom-0 w-2 flex flex-col">
-                            <div className="flex-1 border-r-2 border-white"></div>
-                            <div className="w-1"></div>
-                            <div className="flex-1 border-r-2 border-white"></div>
-                          </div>
-                          {rowsForFinishType.map((row) => (
-                            <div key={row} className="flex space-x-1 mb-1">
-                              {[1, 2, 3].map((col) => {
-                                const rider = finishedRiders.find(
-                                  (r) =>
-                                    r.finishRow.row === row &&
-                                    r.finishRow.col === col &&
-                                    r.round === roundNumber
-                                );
-                                return (
-                                  <div
-                                    key={`${row}-${col}`}
-                                    className={`flex-1 h-12 rounded border-2 flex items-center justify-center text-xs font-bold relative ${
-                                      rider
-                                        ? 'border-indigo-400 bg-indigo-600 text-white'
-                                        : 'border-gray-600 bg-gray-700 text-gray-400'
-                                    }`}
-                                    title={
-                                      rider
-                                        ? `${rider.teamName} ${rider.riderType}`
-                                        : `Row ${row}, Col ${col}`
-                                    }
-                                  >
-                                    {rider ? (
-                                      <div className="flex items-center justify-center">
-                                        <div
-                                          className={`w-6 h-6 ${
-                                            rider.riderType === 'Rouleur'
-                                              ? 'rounded-full'
-                                              : 'rounded-md'
-                                          } flex items-center justify-center text-sm font-bold ${
-                                            getTeamColorClasses(
-                                              teams.find(
-                                                (t) => t.name === rider.teamName
-                                              )?.originalName || ''
-                                            ).bg
-                                          } ${
-                                            getTeamColorClasses(
-                                              teams.find(
-                                                (t) => t.name === rider.teamName
-                                              )?.originalName || ''
-                                            ).text
-                                          } border border-gray-900`}
-                                        >
-                                          {rider.riderType.charAt(0)}
-                                        </div>
-                                      </div>
-                                    ) : (
-                                      `${row}-${col}`
-                                    )}
-                                  </div>
-                                );
-                              })}
+                    {/* Finish Position Grid - Only show when race is still in progress */}
+                    {remainingRiders.length > 0 && (
+                      <div className="mb-4 p-3 bg-gray-900 rounded-lg">
+                        <h4 className="text-sm font-medium text-gray-300 mb-2 text-center">
+                          Finish Positions
+                        </h4>
+                        <div className="flex justify-center">
+                          <div className="bg-gray-800 p-2 rounded-lg relative w-full max-w-2xl">
+                            {/* Double-line border on the right to indicate "slightly further forward" */}
+                            <div className="absolute right-0 top-0 bottom-0 w-2 flex flex-col">
+                              <div className="flex-1 border-r-2 border-white"></div>
+                              <div className="w-1"></div>
+                              <div className="flex-1 border-r-2 border-white"></div>
                             </div>
-                          ))}
+                            {rowsForFinishType.map((row) => (
+                              <div key={row} className="flex space-x-1 mb-1">
+                                {[1, 2, 3].map((col) => {
+                                  const rider = finishedRiders.find(
+                                    (r) =>
+                                      r.finishRow.row === row &&
+                                      r.finishRow.col === col &&
+                                      r.round === roundNumber
+                                  );
+                                  return (
+                                    <div
+                                      key={`${row}-${col}`}
+                                      className={`flex-1 h-12 rounded border-2 flex items-center justify-center text-xs font-bold relative ${
+                                        rider
+                                          ? 'border-indigo-400 bg-indigo-600 text-white'
+                                          : 'border-gray-600 bg-gray-700 text-gray-400'
+                                      }`}
+                                      title={
+                                        rider
+                                          ? `${rider.teamName} ${rider.riderType}`
+                                          : `Row ${row}, Col ${col}`
+                                      }
+                                    >
+                                      {rider ? (
+                                        <div className="flex items-center justify-center">
+                                          <div
+                                            className={`w-6 h-6 ${
+                                              rider.riderType === 'Rouleur'
+                                                ? 'rounded-full'
+                                                : 'rounded-md'
+                                            } flex items-center justify-center text-sm font-bold ${
+                                              getTeamColorClasses(
+                                                teams.find(
+                                                  (t) =>
+                                                    t.name === rider.teamName
+                                                )?.originalName || ''
+                                              ).bg
+                                            } ${
+                                              getTeamColorClasses(
+                                                teams.find(
+                                                  (t) =>
+                                                    t.name === rider.teamName
+                                                )?.originalName || ''
+                                              ).text
+                                            } border border-gray-900`}
+                                          >
+                                            {rider.riderType.charAt(0)}
+                                          </div>
+                                        </div>
+                                      ) : (
+                                        `${row}-${col}`
+                                      )}
+                                    </div>
+                                  );
+                                })}
+                              </div>
+                            ))}
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    )}
 
                     <ul className="space-y-2">
                       {finishedRiders
